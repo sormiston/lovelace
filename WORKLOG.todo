@@ -1,0 +1,19 @@
+
+Phase 1: Development of a data structure which serves as "source of truth" to both Vexflow renderer and to tone.js playback:
+Cases:
+  Vexflow Tutorial:
+    ☐ [TheBasics](https://github.com/0xfe/vexflow/wiki/Tutorial#step-1-the-basics--run-)
+    ☐ [Add Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-2-add-notes--run-)
+    ☐ [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-)
+    ☐ [Beam Your Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-4-beam-your-notes--run-)
+    ☐ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-)
+    ☐ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-)
+    ☐ [Barlines](https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
+
+
+Case 1:
+  Basics:
+    ☐ Render a single measure stave in treble clef in key of C 4/4 with closing barline
+  Note Addition:
+    ☐ USER can add a mix of quarter-notes, quarter-note rests, and quarter-note chords
+    ☐ as above, but USER can Undo and Redo
