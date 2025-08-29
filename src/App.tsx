@@ -1,117 +1,76 @@
 import "./App.css";
 import * as Tone from "tone";
 import { Renderer, Stave, StaveNote, Formatter } from "vexflow";
-import { useLayoutEffect, useRef, useState } from "react";
-
-type Pitch = {
-  step: "C" | "D" | "E" | "F" | "G" | "A" | "B";
-  octave: number;
-  accidental?: "#" | "b" | "##" | "bb" | "natural";
-};
-
-type VexDuration = "q" | "h";
-
-type Note = {
-  type: "NOTE";
-  pitch: Pitch;
-  duration: VexDuration;
-  startTime: string;
-  velocity?: number; // 0-1, optional if only notation
-  tie?: boolean;
-  articulation?: string[]; // e.g., ["staccato", "accent"]
-  dynamic?: string; // e.g., "p", "mf", "f"
-};
-
-type Rest = {
-  type: "REST";
-  duration: VexDuration;
-  startTime: string;
-};
-
-type Chord = {
-  type: "CHORD";
-  notes: Pitch[];
-  duration: VexDuration;
-  startTime: string;
-  velocity: number;
-};
-
-type Measure = {
-  number: number;
-  timeSignature: [number, number];
-  elements: (Note | Rest | Chord)[];
-};
-
-type Track = {
-  name: string;
-  instrument?: string;
-  measures: Measure[];
-};
-
-type Score = {
-  bpm: number;
-  keySignature: string; // e.g., "C", "Gm"
-  tracks: Track[];
-};
+import {
+  useLayoutEffect,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
+import * as compositions from "@/assets/compositions";
 
 function vexToToneDur(input: "q" | "h") {
   switch (input) {
     case "q":
-      return "8n";
+      return "4n";
     case "h":
       return "2n";
   }
 }
 
-const score: Score = {
-  bpm: 120,
-  keySignature: "C",
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          timeSignature: [4, 4],
-          elements: [
-            {
-              // single note
-              type: "NOTE",
-              pitch: { step: "C", octave: 4 },
-              duration: "q",
-              startTime: "0:1",
-              velocity: 0.8,
-            },
-            {
-              // rest
-              type: "REST",
-              duration: "q",
-              startTime: "0:2",
-            },
-            {
-              // chord
-              type: "CHORD",
-              notes: [
-                { step: "E", octave: 4 },
-                { step: "G", octave: 4 },
-              ],
-              duration: "h",
-              startTime: "0:3",
-              velocity: 0.8,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
 function App() {
   // const score = useRef<EasyScore>(null);
   // const system = useRef<System>(null);
-  const synthRef = useRef(new Tone.PolySynth(Tone.Synth).toDestination());
+  const synthRef = useRef<Tone.PolySynth | null>(null);
+
+  useEffect(() => {
+    synthRef.current = new Tone.PolySynth(Tone.Synth).toDestination();
+    return () => {
+      synthRef.current?.dispose();
+      synthRef.current = null;
+    };
+  }, []);
+
   const [audioCtxStarted, setAudioCtxStarted] = useState(false);
+  const [score] = useState(compositions.vexFlowTutAddNotes);
+
+  // build once and keep a ref
+  const partRef = useRef<Tone.Part | null>(null);
+
+  const buildPart = useCallback(() => {
+    const events: Array<[string, { note: string; vel?: number }]> = [];
+    score.tracks.forEach((t) =>
+      t.measures.forEach((m) =>
+        m.elements.forEach((e) => {
+          if (e.type === "REST") return;
+          if (e.type === "CHORD") {
+            e.notes.forEach((n) =>
+              events.push([
+                e.startTime,
+                { note: `${n.step}${n.octave}`, vel: e.velocity },
+              ])
+            );
+          } else {
+            events.push([
+              e.startTime,
+              { note: `${e.pitch.step}${e.pitch.octave}`, vel: e.velocity },
+            ]);
+          }
+        })
+      )
+    );
+
+    if (partRef.current) partRef.current.dispose();
+    partRef.current = new Tone.Part((time, ev) => {
+      synthRef.current?.triggerAttackRelease(
+        ev.note,
+        vexToToneDur("q"),
+        time,
+        ev.vel
+      );
+    }, events).start(0);
+  }, [score]);
 
   useLayoutEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
@@ -150,54 +109,42 @@ function App() {
       const el = document.getElementById("vf");
       if (el) el.innerHTML = "";
     };
-  }, []);
+  }, [score]);
 
   const playMidi = async () => {
-    const transport = Tone.getTransport();
     if (!audioCtxStarted) {
       await Tone.start();
       setAudioCtxStarted(true);
-      transport.position = "0:0";
-      transport.stop();
-
-      score.tracks.forEach((track) => {
-        track.measures.forEach((measure) => {
-          measure.elements
-            .filter((e) => e.type !== "REST")
-            .forEach((e) => {
-              if (e.type === "CHORD") {
-                // chord
-                e.notes.forEach((n) => {
-                  synthRef.current.triggerAttackRelease(
-                    `${n.step}${n.octave}`,
-                    vexToToneDur(e.duration),
-                    e.startTime,
-                    e.velocity
-                  );
-                });
-              } else if (e.type === "NOTE") {
-                // single note
-                synthRef.current.triggerAttackRelease(
-                  `${e.pitch.step}${e.pitch.octave}`,
-                  vexToToneDur(e.duration),
-                  e.startTime,
-                  e.velocity
-                );
-              }
-            });
-        });
-      });
-    } else {
-      console.log("else", synthRef.current);
-      transport.position = "0:0";
-      transport.stop("1:1");
     }
+
+    const transport = Tone.getTransport();
+    transport.cancel(); // clears scheduled events
+    transport.bpm.value = score.bpm;
+    transport.position = "0:0";
+
+    buildPart();
+    transport.start(); // or stop(), pause(), etc.
   };
+
+  // Optional stop
+  const stopMidi = () => {
+    const transport = Tone.getTransport();
+    transport.position = 0;
+    transport.stop();
+  };
+
   return (
-    <>
-      <div id="vf"></div>
-      <button onClick={playMidi}>Play</button>
-    </>
+    <main className="flex flex-col justify-center align-center">
+      <div id="vf" className="w-fit"></div>
+      <div>
+        <button onClick={playMidi} className="bg-neutral-400 border">
+          Play
+        </button>
+        <button onClick={stopMidi} className="bg-neutral-400 border">
+          Stop
+        </button>
+      </div>
+    </main>
   );
 }
 
