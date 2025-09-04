@@ -1903,10 +1903,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-vexflow@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/vexflow/-/vexflow-5.0.0.tgz#4307c84979657c6f733facd1aed60c99be56ed88"
-  integrity sha512-rjB7TV4ygKE5Fl3W5OlG+0dHv22CFufUJdMG6oNgvcn0zp34u+sOboZsadQXnF1O3tZ3myXThaUIaLkJlpNM2Q==
+vexflow4@^4.2.6:
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/vexflow4/-/vexflow4-4.2.6.tgz#959bf2cec3faece4c806622b443e0c23f8a46e99"
+  integrity sha512-ML1cnNlHczgR+MutKTVOfQy7Gtq3si5Zh7Waf3IZQKvwb4yDal7vpdzxGduVgmyNFU2Nl/T0wTrCeCbZfrxIaQ==
 
 vite-tsconfig-paths@^5.1.4:
   version "5.1.4"
