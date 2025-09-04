@@ -2,7 +2,7 @@
 
 Phase 1: Development of a data structure which serves as "source of truth" to both Vexflow renderer and to tone.js playback:
   Vexflow Tutorial:
-    ☐ [TheBasics](https://github.com/0xfe/vexflow/wiki/Tutorial#step-1-the-basics--run-)
+    ✔ [TheBasics](https://github.com/0xfe/vexflow/wiki/Tutorial#step-1-the-basics--run-) @done (04/09/2025, 11:01:49)
     ☐ [Add Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-2-add-notes--run-)
     ☐ [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-)
     ☐ Keys 
@@ -19,3 +19,8 @@ Case 1:
   Note Addition:
     ☐ USER can add a mix of quarter-notes, quarter-note rests, and quarter-note chords
     ☐ as above, but USER can Undo and Redo
+
+
+
+TECH DEBT:
+  ☐ namespacing / splitting of utils (libs) in VF / Tone.js integrations
