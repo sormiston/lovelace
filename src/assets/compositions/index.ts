@@ -16,8 +16,8 @@ const vexflowTutAddNotesOneVoice: Score = {
             [
               {
                 // single quarter note
-                type: "NOTE",
-                pitch: { step: "C", octave: 4 },
+                type: "SONORITY",
+                notes: [{ step: "C", octave: 4 }],
                 duration: "4",
               },
               {
@@ -27,7 +27,7 @@ const vexflowTutAddNotesOneVoice: Score = {
               },
               {
                 // half note chord
-                type: "CHORD",
+                type: "SONORITY",
                 notes: [
                   { step: "E", octave: 4 },
                   { step: "G", octave: 4 },
@@ -58,13 +58,14 @@ const vexflowTutAddNotesMultiVoice: Score = {
             // in this voice: quarter note C5 + quarter note D4 + quarter note rest + quarter note chord of (C4 E4 G4)
             [
               {
-                type: "NOTE",
-                pitch: { step: "C", octave: 5 },
+                type: "SONORITY",
+                notes: [{ step: "C", octave: 5 }],
                 duration: "4",
               },
               {
-                type: "NOTE",
-                pitch: { step: "D", octave: 4 },
+                type: "SONORITY",
+                notes: [{ step: "D", octave: 4 }],
+
                 duration: "4",
               },
               {
@@ -72,7 +73,7 @@ const vexflowTutAddNotesMultiVoice: Score = {
                 duration: "4",
               },
               {
-                type: "CHORD",
+                type: "SONORITY",
                 notes: [
                   { step: "C", octave: 4 },
                   { step: "E", octave: 4 },
@@ -84,8 +85,8 @@ const vexflowTutAddNotesMultiVoice: Score = {
             // in this voice: whole note on c4
             [
               {
-                type: "NOTE",
-                pitch: { step: "C", octave: 4 },
+                type: "SONORITY",
+                notes: [{ step: "C", octave: 4 }],
                 duration: "1",
               },
             ],

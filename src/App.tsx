@@ -55,8 +55,7 @@ function App() {
     stave.setContext(context).draw();
 
     // HARD CODE!  Just one measure for now
-    const voices = utils.scoreMeasureToVFVoices(score.tracks[0].measures[0]);
-    console.log(voices);
+    const voices = utils.mapMeasureToVFVoices(score.tracks[0].measures[0]);
     // Format and justify the notes to 400 pixels.
     new Formatter().joinVoices(voices).format(voices, 300);
 

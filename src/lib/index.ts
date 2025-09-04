@@ -52,21 +52,10 @@ export function measuresToPlayback(
   measures.forEach((measure) => {
     measure.voices.forEach((voice) => {
       let currentTime = 0;
-      voice.forEach((voiceable) => {
-        const seconds = noteDurationToSeconds(voiceable.duration, bpm);
-        if (voiceable.type === "NOTE") {
-          playbackData.push([
-            currentTime,
-            {
-              duration: seconds,
-              velocity: 0.7,
-              step: voiceable.pitch.step,
-              octave: voiceable.pitch.octave,
-              accidental: voiceable.pitch.accidental,
-            },
-          ]);
-        } else if (voiceable.type === "CHORD") {
-          voiceable.notes.forEach((n) => {
+      voice.forEach((musicalEvent) => {
+        const seconds = noteDurationToSeconds(musicalEvent.duration, bpm);
+        if (musicalEvent.type === "SONORITY") {
+          musicalEvent.notes.forEach((n) => {
             playbackData.push([
               currentTime,
               {
@@ -78,10 +67,10 @@ export function measuresToPlayback(
               },
             ]);
           });
-        } else if (voiceable.type === "REST") {
+        } else if (musicalEvent.type === "REST") {
           // NO-OP.  time will be banked as normal
         }
-
+        // bank the time to advance to start of next note event
         currentTime += seconds;
       });
     });
@@ -93,33 +82,22 @@ export function measuresToPlayback(
 /**
  * Vexflow integration functions
  */
-export function scoreMeasureToVFVoices(measure: Measure): VFVoice[] {
+export function mapMeasureToVFVoices(measure: Measure): VFVoice[] {
   const voices = measure.voices.map((voice) => {
-    return voice.map((voiceable) => {
-      if (voiceable.type === "REST") {
+    return voice.map((musicalEvent) => {
+      if (musicalEvent.type === "REST") {
         return new StaveNote({
           keys: ["b/4"],
-          duration: `${voiceable.duration}r`,
+          duration: `${musicalEvent.duration}r`,
         });
-      } else if (voiceable.type === "CHORD") {
-        // chord
-        const keys = voiceable.notes.map(
+      } else if (musicalEvent.type === "SONORITY") {
+        const keys = musicalEvent.notes.map(
           (n) => `${n.step.toLowerCase()}/${n.octave}`
         );
-        return new StaveNote({ keys, duration: `${voiceable.duration}` });
+        return new StaveNote({ keys, duration: `${musicalEvent.duration}` });
       }
 
-      // single note
-      else if (voiceable.type === "NOTE") {
-        return new StaveNote({
-          keys: [
-            `${voiceable.pitch.step.toLowerCase()}/${voiceable.pitch.octave}`,
-          ],
-          duration: `${voiceable.duration}`,
-        });
-      }
-
-      throw new Error("unrecognized element type: ", voiceable);
+      throw new Error("unrecognized element type: ", musicalEvent);
     });
   });
 
