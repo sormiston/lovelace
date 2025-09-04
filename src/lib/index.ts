@@ -1,4 +1,10 @@
-import type { Measure, Pitch, BaseDuration, Rest, Sonority } from "@/types";
+import type {
+  Measure,
+  Pitch,
+  MusicalEvent,
+  Rest,
+  Sonority,
+} from "@/types";
 import { Dot, StaveNote, Voice } from "vexflow4";
 
 /**
@@ -7,7 +13,6 @@ import { Dot, StaveNote, Voice } from "vexflow4";
 export type PlaybackData = [
   number,
   {
-    // time: number;
     duration: number;
     velocity: number;
   } & Pitch
@@ -16,30 +21,48 @@ export type PlaybackData = [
 type Seconds = number;
 
 export function noteDurationToSeconds(
-  duration: BaseDuration,
+  { duration, dots }: MusicalEvent,
   bpm: number
 ): Seconds {
   const beatDuration = 60 / bpm;
+  let baseDuration = 0;
   switch (duration) {
     case "1":
-      return 4 * beatDuration;
+      baseDuration = 4 * beatDuration;
+      break;
     case "2":
-      return 2 * beatDuration;
+      baseDuration = 2 * beatDuration;
+      break;
     case "4":
-      return 1 * beatDuration;
+      baseDuration = 1 * beatDuration;
+      break;
     case "8":
-      return 0.5 * beatDuration;
+      baseDuration = 0.5 * beatDuration;
+      break;
     case "16":
-      return 0.25 * beatDuration;
+      baseDuration = 0.25 * beatDuration;
+      break;
     case "32":
-      return 0.125 * beatDuration;
+      baseDuration = 0.125 * beatDuration;
+      break;
     case "64":
-      return 0.0625 * beatDuration;
+      baseDuration = 0.0625 * beatDuration;
+      break;
     case "128":
-      return 0.03125 * beatDuration;
+      baseDuration = 0.03125 * beatDuration;
+      break;
     default:
       throw new Error("Unrecognized note duration: " + duration);
   }
+
+  const originalBaseDuration = baseDuration;
+  if (dots && dots > 0) {
+    for (let i = 0; i < dots; i++) {
+      baseDuration += originalBaseDuration / Math.pow(2, i + 1);
+    }
+  }
+
+  return baseDuration;
 }
 
 export function measuresToPlayback(
@@ -53,7 +76,7 @@ export function measuresToPlayback(
     measure.voices.forEach((voice) => {
       let currentTime = 0;
       voice.forEach((musicalEvent) => {
-        const seconds = noteDurationToSeconds(musicalEvent.duration, bpm);
+        const seconds = noteDurationToSeconds(musicalEvent, bpm);
         if (musicalEvent.type === "SONORITY") {
           musicalEvent.notes.forEach((n) => {
             playbackData.push([

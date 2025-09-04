@@ -99,7 +99,7 @@ const multiVoice: Score = {
 
 const dottedBasic: Score = {
   name: "dottedBasic",
-  bpm: 60,
+  bpm: 120,
   keySignature: "C",
   tracks: [
     {
