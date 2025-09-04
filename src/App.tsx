@@ -22,7 +22,7 @@ function App() {
   }, []);
 
   const [audioCtxStarted, setAudioCtxStarted] = useState(false);
-  const [score, setScore] = useState(compositions[0]);
+  const [score, setScore] = useState(compositions[2]);
   const partRef = useRef<Tone.Part | null>(null);
 
   const buildPlaybackPart = useCallback(() => {
@@ -54,12 +54,16 @@ function App() {
     stave.addClef("treble").addTimeSignature("4/4");
     stave.setContext(context).draw();
 
+    // FORMAT
     // HARD CODE!  Just one measure for now
     const voices = utils.mapMeasureToVFVoices(score.tracks[0].measures[0]);
-    // Format and justify the notes to 400 pixels.
+    // dangerous to create new Formatter instances on each callback run?  consider holding as ref
     new Formatter().joinVoices(voices).format(voices, 300);
-
-    // Render voices.
+    // TWEAKS --- may become necessary -- unbeamed 8th note dotes currently hanging far from note heads
+    // voices.forEach((voice) =>
+    //   utils.tweakDots(voice.getTickables().filter((t) => isStaveNote(t)))
+    // );
+    // DRAW
     voices.forEach(function (v) {
       v.draw(context, stave);
     });
@@ -87,11 +91,11 @@ function App() {
   };
 
   // Optional stop
-  const stopMidi = () => {
-    const transport = Tone.getTransport();
-    transport.position = 0;
-    transport.stop();
-  };
+  // const stopMidi = () => {
+  //   const transport = Tone.getTransport();
+  //   transport.position = 0;
+  //   transport.stop();
+  // };
 
   const switchComposition = (name: string) => {
     const foundComposition = compositions.find((c) => c.name === name);
@@ -116,9 +120,9 @@ function App() {
         <button onClick={playMidi} className="control-button">
           Play
         </button>
-        <button onClick={stopMidi} className="control-button">
+        {/* <button onClick={stopMidi} className="control-button">
           Stop
-        </button>
+        </button> */}
       </div>
     </main>
   );

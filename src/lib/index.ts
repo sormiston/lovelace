@@ -1,8 +1,8 @@
-import type { Measure, Pitch, BaseDuration } from "@/types";
-import { StaveNote, Voice as VFVoice } from "vexflow4";
+import type { Measure, Pitch, BaseDuration, Rest, Sonority } from "@/types";
+import { Dot, StaveNote, Voice } from "vexflow4";
 
 /**
- * Tone.js integration functions
+ * TONE.JS INTEGRATION
  */
 export type PlaybackData = [
   number,
@@ -75,27 +75,20 @@ export function measuresToPlayback(
       });
     });
   });
-
+  console.log(playbackData);
   return playbackData.length > 0 ? playbackData : null;
 }
 
 /**
- * Vexflow integration functions
+ * VEXFLOW INTEGRATOIN
  */
-export function mapMeasureToVFVoices(measure: Measure): VFVoice[] {
+export function mapMeasureToVFVoices(measure: Measure): Voice[] {
   const voices = measure.voices.map((voice) => {
     return voice.map((musicalEvent) => {
       if (musicalEvent.type === "REST") {
-        return new StaveNote({
-          keys: ["b/4"],
-          duration: `${musicalEvent.duration}`,
-          type: "r",
-        });
+        return mapRestToStaveNote(musicalEvent);
       } else if (musicalEvent.type === "SONORITY") {
-        const keys = musicalEvent.notes.map(
-          (n) => `${n.step.toLowerCase()}/${n.octave}`
-        );
-        return new StaveNote({ keys, duration: `${musicalEvent.duration}` });
+        return mapSonorityToStaveNote(musicalEvent);
       }
 
       throw new Error("unrecognized element type: ", musicalEvent);
@@ -103,7 +96,7 @@ export function mapMeasureToVFVoices(measure: Measure): VFVoice[] {
   });
 
   const tickedVoices = voices.map((voice) => {
-    return new VFVoice({
+    return new Voice({
       // HARD CODED! hard code time signature data for now
       num_beats: 4,
       beat_value: 4,
@@ -112,3 +105,61 @@ export function mapMeasureToVFVoices(measure: Measure): VFVoice[] {
 
   return tickedVoices;
 }
+
+function mapRestToStaveNote({ dots, duration }: Rest) {
+  if (dots) {
+    const dottedStaveNote = new StaveNote({
+      keys: ["b/4"],
+      duration,
+      type: "r",
+      dots,
+    });
+
+    // Attach dots
+    for (let i = 0; i < dots; i++) {
+      Dot.buildAndAttach([dottedStaveNote], { all: true });
+    }
+
+    return dottedStaveNote;
+  }
+
+  return new StaveNote({
+    keys: ["b/4"],
+    duration,
+    type: "r",
+  });
+}
+
+function mapSonorityToStaveNote({ notes, duration, dots }: Sonority) {
+  const keys = notes.map((n) => `${n.step.toLowerCase()}/${n.octave}`);
+
+  if (dots) {
+    const dottedStaveNote = new StaveNote({
+      keys,
+      duration,
+      dots,
+    });
+
+    for (let i = 0; i < dots; i++) {
+      Dot.buildAndAttach([dottedStaveNote], { all: true });
+    }
+
+    return dottedStaveNote;
+  }
+
+  return new StaveNote({
+    keys,
+    duration,
+  });
+}
+
+// export function tweakDots(notes: StaveNote[]) {
+//   notes.forEach((note) => {
+//     note.getModifiersByType("Dot").forEach((dot) => {
+//       if (note.getDuration() === "8") {
+//         dot.setXShift(dot.getXShift() - 10);
+//         dot.setYShift(6);
+//       }
+//     });
+//   });
+// }

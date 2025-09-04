@@ -11,6 +11,7 @@ export type Pitch = {
 export type Rest = {
   type: "REST";
   duration: BaseDuration;
+  dots?: number;
 };
 
 
@@ -18,6 +19,7 @@ export type Sonority = {
   type: "SONORITY";
   notes: Pitch[]; // Single pitch for a note, multiple for a chord
   duration: BaseDuration;
+  dots?: number;
 };
 
 // Voice and measure structure
