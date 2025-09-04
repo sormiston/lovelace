@@ -126,8 +126,8 @@ export function scoreMeasureToVFVoices(measure: Measure): VFVoice[] {
   const tickedVoices = voices.map((voice) => {
     return new VFVoice({
       // HARD CODED! hard code time signature data for now
-      numBeats: 4,
-      beatValue: 4,
+      num_beats: 4,
+      beat_value: 4,
     }).addTickables(voice);
   });
 
