@@ -9,15 +9,8 @@ import {
   useCallback,
 } from "react";
 import * as compositions from "@/assets/compositions";
+import * as utils from "@/utils";
 
-function vexToToneDur(input: "q" | "h") {
-  switch (input) {
-    case "q":
-      return "4n";
-    case "h":
-      return "2n";
-  }
-}
 
 function App() {
   // const score = useRef<EasyScore>(null);
@@ -35,42 +28,25 @@ function App() {
   const [audioCtxStarted, setAudioCtxStarted] = useState(false);
   const [score] = useState(compositions.vexFlowTutAddNotes);
 
-  // build once and keep a ref
   const partRef = useRef<Tone.Part | null>(null);
 
-  const buildPart = useCallback(() => {
-    const events: Array<[string, { note: string; vel?: number }]> = [];
-    score.tracks.forEach((t) =>
-      t.measures.forEach((m) =>
-        m.elements.forEach((e) => {
-          if (e.type === "REST") return;
-          if (e.type === "CHORD") {
-            e.notes.forEach((n) =>
-              events.push([
-                e.startTime,
-                { note: `${n.step}${n.octave}`, vel: e.velocity },
-              ])
-            );
-          } else {
-            events.push([
-              e.startTime,
-              { note: `${e.pitch.step}${e.pitch.octave}`, vel: e.velocity },
-            ]);
-          }
-        })
-      )
-    );
+  const buildPlaybackPart = useCallback(() => {
+    const targetMeasures = score.tracks[0].measures; // HARD-CODE: will need some measure range selection later
+    const bpm = score.bpm;
+    const events = utils.measuresToPlayback(targetMeasures, bpm);
+
+    if (!events) return;
 
     if (partRef.current) partRef.current.dispose();
     partRef.current = new Tone.Part((time, ev) => {
       synthRef.current?.triggerAttackRelease(
-        ev.note,
-        vexToToneDur("q"),
+        `${ev.step}${ev.accidental || ""}${ev.octave}`,
+        ev.duration,
         time,
-        ev.vel
+        ev.velocity
       );
     }, events).start(0);
-  }, [score]);
+  }, [score.tracks, score.bpm]);
 
   useLayoutEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
@@ -122,7 +98,7 @@ function App() {
     transport.bpm.value = score.bpm;
     transport.position = "0:0";
 
-    buildPart();
+    buildPlaybackPart();
     transport.start(); // or stop(), pause(), etc.
   };
 

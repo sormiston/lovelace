@@ -13,29 +13,24 @@ export const vexFlowTutAddNotes: Score = {
           timeSignature: [4, 4],
           elements: [
             {
-              // single note
+              // single quarter note
               type: "NOTE",
               pitch: { step: "C", octave: 4 },
-              duration: "q",
-              startTime: "0:1",
-              velocity: 0.8,
+              duration: "4",
             },
             {
-              // rest
+              // quarter note rest
               type: "REST",
-              duration: "q",
-              startTime: "0:2",
+              duration: "4",
             },
             {
-              // chord
+              // half note chord
               type: "CHORD",
               notes: [
                 { step: "E", octave: 4 },
                 { step: "G", octave: 4 },
               ],
-              duration: "h",
-              startTime: "0:3",
-              velocity: 0.8,
+              duration: "2",
             },
           ],
         },

@@ -1,19 +1,15 @@
 export type Pitch = {
   step: "C" | "D" | "E" | "F" | "G" | "A" | "B";
   octave: number;
-  accidental?: "#" | "b" | "##" | "bb" | "natural";
+  accidental?: "#" | "b" | "##" | "bb";
 };
 
-export type VexDuration = "q" | "h"; // TODO: add for completion
-
-export type ToneNotationDuration = "4n" | "2n";
+export type BaseDuration = "1" | "2" | "4" | "8" | "16" | "32" | "64" | "128";
 
 export type Note = {
   type: "NOTE";
   pitch: Pitch;
-  duration: VexDuration;
-  startTime: string;
-  velocity?: number; // 0-1, optional if only notation
+  duration: BaseDuration;
   tie?: boolean;
   articulation?: string[]; // e.g., ["staccato", "accent"]
   dynamic?: string; // e.g., "p", "mf", "f"
@@ -21,16 +17,13 @@ export type Note = {
 
 export type Rest = {
   type: "REST";
-  duration: VexDuration;
-  startTime: string;
+  duration: BaseDuration;
 };
 
 export type Chord = {
   type: "CHORD";
   notes: Pitch[];
-  duration: VexDuration;
-  startTime: string;
-  velocity: number;
+  duration: BaseDuration;
 };
 
 export type Measure = {
