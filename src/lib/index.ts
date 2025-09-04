@@ -88,7 +88,8 @@ export function mapMeasureToVFVoices(measure: Measure): VFVoice[] {
       if (musicalEvent.type === "REST") {
         return new StaveNote({
           keys: ["b/4"],
-          duration: `${musicalEvent.duration}r`,
+          duration: `${musicalEvent.duration}`,
+          type: "r",
         });
       } else if (musicalEvent.type === "SONORITY") {
         const keys = musicalEvent.notes.map(
