@@ -29,8 +29,10 @@ export type Chord = {
 export type Measure = {
   number: number;
   timeSignature: [number, number];
-  elements: (Note | Rest | Chord)[];
+  voices: Voiceable[];
 };
+
+export type Voiceable = (Note | Rest | Chord)[];
 
 export type Track = {
   name: string;

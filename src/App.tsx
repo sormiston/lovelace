@@ -1,6 +1,6 @@
 import "./App.css";
 import * as Tone from "tone";
-import { Renderer, Stave, StaveNote, Formatter } from "vexflow";
+import { Renderer, Stave, Formatter } from "vexflow";
 import {
   useLayoutEffect,
   useEffect,
@@ -9,8 +9,7 @@ import {
   useCallback,
 } from "react";
 import * as compositions from "@/assets/compositions";
-import * as utils from "@/utils";
-
+import * as utils from "@/lib";
 
 function App() {
   // const score = useRef<EasyScore>(null);
@@ -58,29 +57,17 @@ function App() {
     stave.addClef("treble").addTimeSignature("4/4");
     stave.setContext(context).draw();
 
-    // Convert Score to VexFlow notes
-    const vfNotes = score.tracks[0].measures[0].elements.map((e) => {
-      if (e.type === "REST") {
-        return new StaveNote({ keys: ["b/4"], duration: `${e.duration}r` }); // r = rest
-      } else if (e.type === "CHORD") {
-        // chord
-        const keys = e.notes.map((n) => `${n.step.toLowerCase()}/${n.octave}`);
-        return new StaveNote({ keys, duration: `${e.duration}` });
-      }
+    // HARD CODE!  Just one measure for now
+    const voices = utils.scoreMeasureToVFVoices(score.tracks[0].measures[0]);
+    // Format and justify the notes to 400 pixels.
+    new Formatter().joinVoices(voices).format(voices, 300);
 
-      // single note
-      else if (e.type === "NOTE") {
-        return new StaveNote({
-          keys: [`${e.pitch.step.toLowerCase()}/${e.pitch.octave}`],
-          duration: `${e.duration}`,
-        });
-      }
-
-      throw new Error("unrecognized element type: ", e);
+    // Render voices.
+    voices.forEach(function (v) {
+      v.draw(context, stave);
     });
 
-    Formatter.FormatAndDraw(context, stave, vfNotes);
-
+    // CLEAN-UP
     return () => {
       const el = document.getElementById("vf");
       if (el) el.innerHTML = "";
