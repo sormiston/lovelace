@@ -1,6 +1,5 @@
-import "./App.css";
 import * as Tone from "tone";
-import { Renderer, Stave, Formatter } from "vexflow";
+import { Renderer, Stave, Formatter } from "vexflow4";
 import {
   useLayoutEffect,
   useEffect,
@@ -8,12 +7,10 @@ import {
   useState,
   useCallback,
 } from "react";
-import * as compositions from "@/assets/compositions";
+import compositions from "@/assets/compositions";
 import * as utils from "@/lib";
 
 function App() {
-  // const score = useRef<EasyScore>(null);
-  // const system = useRef<System>(null);
   const synthRef = useRef<Tone.PolySynth | null>(null);
 
   useEffect(() => {
@@ -25,11 +22,11 @@ function App() {
   }, []);
 
   const [audioCtxStarted, setAudioCtxStarted] = useState(false);
-  const [score] = useState(compositions.vexFlowTutAddNotes);
-
+  const [score, setScore] = useState(compositions[0]);
   const partRef = useRef<Tone.Part | null>(null);
 
   const buildPlaybackPart = useCallback(() => {
+    console.log("building playback part");
     const targetMeasures = score.tracks[0].measures; // HARD-CODE: will need some measure range selection later
     const bpm = score.bpm;
     const events = utils.measuresToPlayback(targetMeasures, bpm);
@@ -45,7 +42,7 @@ function App() {
         ev.velocity
       );
     }, events).start(0);
-  }, [score.tracks, score.bpm]);
+  }, [score]);
 
   useLayoutEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
@@ -53,12 +50,13 @@ function App() {
     renderer.resize(500, 200);
     const context = renderer.getContext();
 
-    const stave = new Stave(10, 40, 300);
+    const stave = new Stave(10, 40, 350);
     stave.addClef("treble").addTimeSignature("4/4");
     stave.setContext(context).draw();
 
     // HARD CODE!  Just one measure for now
     const voices = utils.scoreMeasureToVFVoices(score.tracks[0].measures[0]);
+    console.log(voices);
     // Format and justify the notes to 400 pixels.
     new Formatter().joinVoices(voices).format(voices, 300);
 
@@ -96,14 +94,30 @@ function App() {
     transport.stop();
   };
 
+  const switchComposition = (name: string) => {
+    const foundComposition = compositions.find((c) => c.name === name);
+    if (!foundComposition) throw new Error("Could not find composition");
+    setScore(foundComposition);
+  };
+
   return (
     <main className="flex flex-col justify-center align-center">
+      <div className="space-x-1">
+        {compositions.map(({ name }) => (
+          <CompositionSwitchButton
+            key={name}
+            name={name}
+            handleClick={switchComposition}
+            className="control-button"
+          />
+        ))}
+      </div>
       <div id="vf" className="w-fit"></div>
-      <div>
-        <button onClick={playMidi} className="bg-neutral-400 border">
+      <div className="space-x-1">
+        <button onClick={playMidi} className="control-button">
           Play
         </button>
-        <button onClick={stopMidi} className="bg-neutral-400 border">
+        <button onClick={stopMidi} className="control-button">
           Stop
         </button>
       </div>
@@ -111,4 +125,19 @@ function App() {
   );
 }
 
+function CompositionSwitchButton({
+  name,
+  handleClick,
+  className,
+}: {
+  name: string;
+  handleClick: (x: string) => void;
+  className?: string;
+}) {
+  return (
+    <button onClick={() => handleClick(name)} className={className}>
+      {name}
+    </button>
+  );
+}
 export default App;

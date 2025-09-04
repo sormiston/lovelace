@@ -1,5 +1,5 @@
 import type { Measure, Pitch, BaseDuration } from "@/types";
-import { StaveNote, Voice as VFVoice } from "vexflow";
+import { StaveNote, Voice as VFVoice } from "vexflow4";
 
 /**
  * Tone.js integration functions

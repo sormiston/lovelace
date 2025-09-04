@@ -41,6 +41,7 @@ export type Track = {
 };
 
 export type Score = {
+  name: string;
   bpm: number;
   keySignature: string; // e.g., "C", "Gm"
   tracks: Track[];
