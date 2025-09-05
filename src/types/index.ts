@@ -7,13 +7,11 @@ export type Pitch = {
   accidental?: "#" | "b" | "##" | "bb";
 };
 
-
 export type Rest = {
   type: "REST";
   duration: BaseDuration;
   dots?: number;
 };
-
 
 export type Sonority = {
   type: "SONORITY";
@@ -23,8 +21,8 @@ export type Sonority = {
 };
 
 // Voice and measure structure
-export type MusicalEvent = Rest | Sonority;
-export type VoiceLine = MusicalEvent[];
+export type Durational = Rest | Sonority;
+export type VoiceLine = Durational[];
 
 export type Measure = {
   number: number;

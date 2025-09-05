@@ -1,10 +1,4 @@
-import type {
-  Measure,
-  Pitch,
-  MusicalEvent,
-  Rest,
-  Sonority,
-} from "@/types";
+import type { Measure, Pitch, Durational, Rest, Sonority } from "@/types";
 import { Dot, StaveNote, Voice } from "vexflow4";
 
 /**
@@ -21,7 +15,7 @@ export type PlaybackData = [
 type Seconds = number;
 
 export function noteDurationToSeconds(
-  { duration, dots }: MusicalEvent,
+  { duration, dots }: Durational,
   bpm: number
 ): Seconds {
   const beatDuration = 60 / bpm;
@@ -75,10 +69,10 @@ export function measuresToPlayback(
   measures.forEach((measure) => {
     measure.voices.forEach((voice) => {
       let currentTime = 0;
-      voice.forEach((musicalEvent) => {
-        const seconds = noteDurationToSeconds(musicalEvent, bpm);
-        if (musicalEvent.type === "SONORITY") {
-          musicalEvent.notes.forEach((n) => {
+      voice.forEach((durational) => {
+        const seconds = noteDurationToSeconds(durational, bpm);
+        if (durational.type === "SONORITY") {
+          durational.notes.forEach((n) => {
             playbackData.push([
               currentTime,
               {
@@ -90,7 +84,7 @@ export function measuresToPlayback(
               },
             ]);
           });
-        } else if (musicalEvent.type === "REST") {
+        } else if (durational.type === "REST") {
           // NO-OP.  time will be banked as normal
         }
         // bank the time to advance to start of next note event
@@ -107,14 +101,14 @@ export function measuresToPlayback(
  */
 export function mapMeasureToVFVoices(measure: Measure): Voice[] {
   const voices = measure.voices.map((voice) => {
-    return voice.map((musicalEvent) => {
-      if (musicalEvent.type === "REST") {
-        return mapRestToStaveNote(musicalEvent);
-      } else if (musicalEvent.type === "SONORITY") {
-        return mapSonorityToStaveNote(musicalEvent);
+    return voice.map((durational) => {
+      if (durational.type === "REST") {
+        return mapRestToStaveNote(durational);
+      } else if (durational.type === "SONORITY") {
+        return mapSonorityToStaveNote(durational);
       }
 
-      throw new Error("unrecognized element type: ", musicalEvent);
+      throw new Error("unrecognized element type: ", durational);
     });
   });
 
