@@ -1,33 +1,46 @@
-
-
 Phase 1: Development of a data structure which serves as "source of truth" to both Vexflow renderer and to tone.js playback:
   Vexflow Tutorial:
-    ✔ [TheBasics](https://github.com/0xfe/vexflow/wiki/Tutorial#step-1-the-basics--run-) @done (04/09/2025, 11:01:49)
-    ✔ [Add Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-2-add-notes--run-) @done (04/09/2025, 16:07:45)
-    ☐ [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):
-      ☐ Dotted rhythms
+    PHASE 1A: RHYTHMIC CONCERNS
+      ✔ [TheBasics](https://github.com/0xfe/vexflow/wiki/Tutorial#step-1-the-basics--run-) @done (04/09/2025, 11:01:49)
+      ✔ [Add Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-2-add-notes--run-) @done (04/09/2025, 16:07:45)
+      ☐ Dotted rhythms [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):
         ✔ single dotted @done (05/09/2025, 11:42:06)
         ☐ double dotted
-      ☐ Accidentals
+      ☐ Time Signatures
+        ☐ 3/4
+        ☐ 6/8
+        ☐ 7/8
+      ☐ Function to check available vexflow ticks per measure / confirm measure to "tick-complete" (all rhythmic values sum to a full bar)
+      ☐ Tuplets
+
+    PHASE 1B: TONAL CONCERNS
+    ☐ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):)
     ☐ Key Signatures + "in-key" accidentals
+
+
+    PHASE 1C: ENGRAVING AND EXPRESSION CONCERNS
     ☐ [Beam Your Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-4-beam-your-notes--run-)
     ☐ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-)
-    ☐ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-)
+    ✘ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-) @cancelled (05/09/2025, 12:03:55) -- MOVE TO ANOTHER DEV PHASE
     ☐ [Barlines](https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
     ☐ Change synth for sampler and implement instrument selection
     
 
 
 Phase 2: User Create Flows
-Case 1:
   Basics:
-    ☐ Render a single measure stave in treble clef in key of C 4/4 with closing barline
+    ☐ User can initialize a document with a number of empty measures, designating time signature and key signature
   Note Addition:
     ☐ USER can add a mix of quarter-notes, quarter-note rests, and quarter-note chords
-    ☐ as above, but USER can Undo and Redo
+    ☐ USER can Undo and Redo
 
 
+Running Task List
+SHOULD-DO ENHANCEMENTS:
+  ✔ optional metronome click track with playback @done (05/09/2025, 18:10:28)
+  ✔ active and inactive states for control buttons (play, selected score) @done (05/09/2025, 18:10:31)
 
 TECH DEBT:
   ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)
   ☐ namespacing / splitting of utils (libs) in VF / Tone.js integrations
+  ☐ typing of tuple and object type events (2nd arg) and callback (1st arg) in Tone.Part can be improved by pulling types from Tone.js

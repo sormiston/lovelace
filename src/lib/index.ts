@@ -1,16 +1,11 @@
-import type { Measure, Pitch, Durational, Rest, Sonority } from "@/types";
+import type {
+  Measure,
+  Durational,
+  Rest,
+  Sonority,
+  PartEventRich,
+} from "@/types";
 import { Dot, StaveNote, Voice } from "vexflow4";
-
-/**
- * TONE.JS INTEGRATION
- */
-export type PlaybackData = [
-  number,
-  {
-    duration: number;
-    velocity: number;
-  } & Pitch
-];
 
 type Seconds = number;
 
@@ -62,10 +57,10 @@ export function noteDurationToSeconds(
 export function measuresToPlayback(
   measures: Measure[],
   bpm: number
-): PlaybackData[] | null {
+): PartEventRich[] | null {
   if (measures.length === 0) return null;
 
-  const playbackData: PlaybackData[] = [];
+  const playbackData: PartEventRich[] = [];
   measures.forEach((measure) => {
     measure.voices.forEach((voice) => {
       let currentTime = 0;

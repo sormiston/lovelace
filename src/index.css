@@ -2,6 +2,9 @@
 
 @layer components {
   .control-button {
-    @apply bg-neutral-200 border p-1 cursor-pointer;
+    @apply border p-1 cursor-pointer;
+  }
+  .control-button--active {
+    @apply bg-neutral-300;
   }
 }

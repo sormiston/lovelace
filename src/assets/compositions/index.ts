@@ -97,8 +97,8 @@ const multiVoice: Score = {
   ],
 };
 
-const dottedBasic: Score = {
-  name: "dottedBasic",
+const singleDotted: Score = {
+  name: "singleDotted",
   bpm: 120,
   keySignature: "C",
   tracks: [
@@ -139,7 +139,63 @@ const dottedBasic: Score = {
   ],
 };
 
-export default [oneVoice, multiVoice, dottedBasic];
+const doubleDotted: Score = {
+  name: "doubleDotted",
+  bpm: 120,
+  keySignature: "C",
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          timeSignature: [4, 4],
+          voices: [
+            [
+              {
+                type: "SONORITY",
+                notes: [
+                  { step: "C", octave: 5 },
+                  { step: "E", octave: 5 },
+                ],
+                duration: "4",
+                dots: 2,
+              },
+              {
+                type: "SONORITY",
+                notes: [
+                  { step: "G", octave: 4 },
+                  { step: "D", octave: 5 },
+                ],
+                duration: "16",
+              },
+              {
+                type: "SONORITY",
+                notes: [
+                  { step: "E", octave: 4 },
+                  { step: "C", octave: 5 },
+                ],
+                duration: "4",
+                dots: 2,
+              },
+              {
+                type: "SONORITY",
+                notes: [
+                  { step: "E", octave: 4 },
+                  { step: "B", octave: 4 },
+                ],
+                duration: "16",
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+export default [oneVoice, multiVoice, singleDotted, doubleDotted];
 
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)
 // {
