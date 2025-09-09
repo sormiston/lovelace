@@ -43,9 +43,20 @@ function App() {
   // METRONOME SETUP / TEARDOWN
   useEffect(() => {
     if (metronomeActive) {
-      // HARD CODED -- just 1 measure
+      // HARD CODED & BASIC -- just 1 measure, naive quarter note groupings
+      const targetMeasure = score.tracks[0].measures[0];
+      const resolvedTimeSig =
+        targetMeasure.timeSignature || score.timeSignature;
+      // calclulate how many quarter notes in a bar
+      const quarterNotesPerBar = (resolvedTimeSig[0] * 4) / resolvedTimeSig[1];
+      console.log("quarterNotesPerBar", quarterNotesPerBar);
+      // build array of metronome click events for one measure
+      // e.g., ["0:0:00", "C5"], ["0:1:00", "C5"], ["0:2:00", "C5"], ["0:3:00", "C5"]
+      // TODO - handle time signatures with fractional quarter notes (e.g., 6/8)
       setMetronomeEvents(
-        new Array(4).fill(null).map((_, i) => [`0:${i}:00`, "C5"])
+        new Array(quarterNotesPerBar)
+          .fill(null)
+          .map((_, i) => [`0:${i}:00`, "C5"])
       );
     }
 
@@ -54,6 +65,7 @@ function App() {
     };
   }, [score, metronomeActive]);
 
+  /** CREATE & SET TONE.JS PLAYBACK PARTS */
   const buildPlaybackPart = () => {
     console.log("building playback part");
     const targetMeasures = score.tracks[0].measures;
@@ -81,10 +93,9 @@ function App() {
         clickSynthRef.current?.triggerAttackRelease(note, "32n", time);
       }, metronomeEvents).start(0);
     }
-
-    Tone.getTransport().start();
   };
 
+  /** VEXFLOW RENDER EFFECT - DEPS: SCORE*/
   useEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
     const renderer = new Renderer(div, Renderer.Backends.SVG);
@@ -93,12 +104,21 @@ function App() {
 
     const STAVE_WIDTH = 350; // MAGIC NUMBER!
     const stave = new Stave(10, 40, STAVE_WIDTH);
-    stave.addClef("treble").addTimeSignature("4/4");
+
+    // STAVE CONFIG
+
+    // HARD CODED!  Just one track for now!
+    const targetMeasure = score.tracks[0].measures[0];
+
+    const resolvedTimeSig = targetMeasure.timeSignature || score.timeSignature;
+    stave
+      .addClef("treble")
+      .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`);
     stave.setContext(context).draw();
 
     // FORMAT
     // HARD CODE!  Just one measure for now
-    const voices = utils.mapMeasureToVFVoices(score.tracks[0].measures[0]);
+    const voices = utils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig);
     // dangerous to create new Formatter instances on each callback run?  consider holding as ref
     const noteArea = stave.getNoteEndX() - stave.getNoteStartX();
     new Formatter().joinVoices(voices).format(voices, noteArea);
@@ -125,12 +145,12 @@ function App() {
     }
 
     const transport = Tone.getTransport();
-    transport.cancel(); // clears scheduled events
+    transport.cancel();
     transport.bpm.value = score.bpm;
     transport.position = "0:0";
 
     buildPlaybackPart();
-    transport.start(); // or stop(), pause(), etc.
+    transport.start();
   };
 
   // Optional stop

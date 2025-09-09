@@ -4,6 +4,7 @@ import type {
   Rest,
   Sonority,
   PartEventRich,
+  TimeSignature,
 } from "@/types";
 import { Dot, StaveNote, Voice } from "vexflow4";
 
@@ -94,7 +95,10 @@ export function measuresToPlayback(
 /**
  * VEXFLOW INTEGRATOIN
  */
-export function mapMeasureToVFVoices(measure: Measure): Voice[] {
+export function mapMeasureToVFVoices(
+  measure: Measure,
+  timeSig: TimeSignature
+): Voice[] {
   const voices = measure.voices.map((voice) => {
     return voice.map((durational) => {
       if (durational.type === "REST") {
@@ -110,8 +114,8 @@ export function mapMeasureToVFVoices(measure: Measure): Voice[] {
   const tickedVoices = voices.map((voice) => {
     return new Voice({
       // HARD CODED! hard code time signature data for now
-      num_beats: 4,
-      beat_value: 4,
+      num_beats: timeSig[0],
+      beat_value: timeSig[1],
     }).addTickables(voice);
   });
 

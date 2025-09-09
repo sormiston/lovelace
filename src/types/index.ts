@@ -26,10 +26,11 @@ export type Sonority = {
 // Voice and measure structure
 export type Durational = Rest | Sonority;
 export type VoiceLine = Durational[];
+export type TimeSignature = [number, number];
 
 export type Measure = {
   number: number;
-  timeSignature: [number, number];
+  timeSignature?: TimeSignature;
   voices: VoiceLine[];
 };
 
@@ -44,6 +45,7 @@ export type Score = {
   name: string;
   bpm: number;
   keySignature: string; // e.g., "C", "Gm"
+  timeSignature: TimeSignature;
   tracks: Track[];
 };
 
