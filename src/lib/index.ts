@@ -217,10 +217,12 @@ function mapDurationalToStaveNote(d: Durational) {
   const { duration, dots } = d;
   if (dots) {
     const dottedStaveNote = new StaveNote({
+      clef: "treble", // HARD CODED CLEF -- TODO: make dynamic
       keys,
       duration,
       dots,
       ...(isRest && { type: "r" }),
+      auto_stem: true,
     });
 
     for (let i = 0; i < dots; i++) {
@@ -231,9 +233,11 @@ function mapDurationalToStaveNote(d: Durational) {
   }
 
   return new StaveNote({
+    clef: "treble", // HARD CODED CLEF -- TODO: make dynamic
     keys,
     duration,
     ...(isRest && { type: "r" }),
+    auto_stem: true,
   });
 }
 

@@ -16,6 +16,7 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
         ☐ 9/8
         
       ☐ Tuplets
+        ✔ Triplets with rests @done (11/09/2025, 14:26:20)
 
     PHASE 1B: TONAL CONCERNS
     ☐ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):)
@@ -23,7 +24,7 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
     ☐ Clefs
 
     PHASE 1C: ENGRAVING AND EXPRESSION CONCERNS
-    ☐ [Beam Your Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-4-beam-your-notes--run-)
+    ✔ [Beam Your Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-4-beam-your-notes--run-) @done (11/09/2025, 14:25:27)
     ☐ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-)
     ✘ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-) @cancelled (05/09/2025, 12:03:55) -- MOVE TO ANOTHER DEV PHASE
     ☐ [Barlines](https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
@@ -45,6 +46,11 @@ SHOULD-DO ENHANCEMENTS:
   ✔ optional metronome click track with playback @done (05/09/2025, 18:10:28)
   ✔ active and inactive states for control buttons (play, selected score) @done (05/09/2025, 18:10:31)
 
+BUGS: 
+  ☐ Whole bar rests should be centered
+  ✔ Stem Directions are not being auto-determined unless beamed @done (11/09/2025, 14:52:28)
+  ☐ Stem Directions are not being auto-determined by voice
+  
 TECH DEBT:
   ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)
   ☐ 3 - lazy load score to simulate db / async io and stress test no-data state of main rendering component (at time of writing, <App />)

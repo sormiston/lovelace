@@ -106,22 +106,23 @@ function App() {
     const targetMeasure = score.tracks[0].measures[0];
     const resolvedTimeSig = score.timeSignature;
 
-    // 1) Build voices (independent of stave width)
+    // Build voices
     const [voices, artifacts] = utils.mapMeasureToVFVoices(
       targetMeasure,
       resolvedTimeSig
     );
 
-    // 2) First pass formatter to find minimal note area (no justification)
-    const firstPass = new Formatter();
-    firstPass.joinVoices(voices).format(voices, 0); // width=0 => no justify
-    const minNoteArea = firstPass.getMinTotalWidth(); // minimal width needed for notes
+    // Pre-calc minimal note area (no justification)
+    const formatter = new Formatter();
+    const minNoteArea = formatter
+      .joinVoices(voices)
+      .preCalculateMinTotalWidth(voices);
 
-    // 3) Estimate left glyph (clef + time) width; after drawing we’ll recompute actual note area
-    const LEFT_GLYPHS_EST = 55; // empirical; adjust if needed
+    // Estimate clef/time glyph width; size stave accordingly
+    const LEFT_GLYPHS_EST = 55;
     const RIGHT_PADDING = 20;
 
-    const desiredNoteArea = Math.max(minNoteArea, 220); // enforce a comfortable minimum
+    const desiredNoteArea = Math.max(minNoteArea, 200);
     const STAVE_WIDTH = LEFT_GLYPHS_EST + desiredNoteArea + RIGHT_PADDING;
 
     const stave = new Stave(10, 40, STAVE_WIDTH);
@@ -131,12 +132,11 @@ function App() {
       .setContext(context)
       .draw();
 
-    // 4) Second pass: actual available note area between start/end
-    const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5; // slight fudge factor
-    const formatter = new Formatter();
-    formatter.joinVoices(voices).format(voices, actualNoteArea);
+    // Format with actual available note area between start/end
+    const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5;
+    formatter.format(voices, actualNoteArea);
 
-    // 5) Draw voices, beams, artifacts
+    // Draw voices, beams, artifacts
     const beamsByVoice = voices.map((v) => {
       const stemmableNotes = v
         .getTickables()
@@ -168,13 +168,6 @@ function App() {
     buildPlaybackPart();
     transport.start();
   };
-
-  // Optional stop
-  // const stopMidi = () => {
-  //   const transport = Tone.getTransport();
-  //   transport.position = 0;
-  //   transport.stop();
-  // };
 
   const switchComposition = (name: string) => {
     const foundComposition = compositions.find((c) => c.name === name);
