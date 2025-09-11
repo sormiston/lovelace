@@ -23,9 +23,29 @@ export type Sonority = {
   dots?: number;
 };
 
+export interface NoteContext {
+  type: "TUPLET" | "SIMPLE";
+  members: Durational[];
+}
+
+export interface TupletGrouping extends NoteContext {
+  type: "TUPLET";
+  numNotes: number;
+  inTimeOf: number;
+  unitDuration: BaseDuration;
+  members: Durational[];
+}
+
+export interface SimpleGrouping extends NoteContext {
+  type: "SIMPLE";
+  members: Durational[];
+}
+
+export type NoteGrouping = SimpleGrouping | TupletGrouping;
+
 // Voice and measure structure
 export type Durational = Rest | Sonority;
-export type VoiceLine = Durational[];
+export type VoiceLine = NoteGrouping[];
 export type TimeSignature = [number, number];
 
 export type Measure = {

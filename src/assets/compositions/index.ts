@@ -15,24 +15,29 @@ const oneVoice: Score = {
           voices: [
             [
               {
-                // single quarter note
-                type: "SONORITY",
-                notes: [{ step: "C", octave: 4 }],
-                duration: "4",
-              },
-              {
-                // quarter note rest
-                type: "REST",
-                duration: "4",
-              },
-              {
-                // half note chord
-                type: "SONORITY",
-                notes: [
-                  { step: "E", octave: 4 },
-                  { step: "G", octave: 4 },
+                type: "SIMPLE",
+                members: [
+                  {
+                    // single quarter note
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 4 }],
+                    duration: "4",
+                  },
+                  {
+                    // quarter note rest
+                    type: "REST",
+                    duration: "4",
+                  },
+                  {
+                    // half note chord
+                    type: "SONORITY",
+                    notes: [
+                      { step: "E", octave: 4 },
+                      { step: "G", octave: 4 },
+                    ],
+                    duration: "2",
+                  },
                 ],
-                duration: "2",
               },
             ],
           ],
@@ -58,36 +63,46 @@ const multiVoice: Score = {
             // in this voice: quarter note C5 + quarter note D4 + quarter note rest + quarter note chord of (C4 E4 G4)
             [
               {
-                type: "SONORITY",
-                notes: [{ step: "C", octave: 5 }],
-                duration: "4",
-              },
-              {
-                type: "SONORITY",
-                notes: [{ step: "D", octave: 4 }],
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 4 }],
 
-                duration: "4",
-              },
-              {
-                type: "REST",
-                duration: "4",
-              },
-              {
-                type: "SONORITY",
-                notes: [
-                  { step: "C", octave: 4 },
-                  { step: "E", octave: 4 },
-                  { step: "G", octave: 4 },
+                    duration: "4",
+                  },
+                  {
+                    type: "REST",
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "C", octave: 4 },
+                      { step: "E", octave: 4 },
+                      { step: "G", octave: 4 },
+                    ],
+                    duration: "4",
+                  },
                 ],
-                duration: "4",
               },
             ],
             // in this voice: whole note on c4
             [
               {
-                type: "SONORITY",
-                notes: [{ step: "C", octave: 4 }],
-                duration: "1",
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 4 }],
+                    duration: "1",
+                  },
+                ],
               },
             ],
           ],
@@ -112,24 +127,29 @@ const singleDotted: Score = {
           voices: [
             [
               {
-                type: "SONORITY",
-                notes: [{ step: "D", octave: 5 }],
-                duration: "8",
-                dots: 1,
-              },
-              {
-                type: "SONORITY",
-                notes: [{ step: "E", octave: 5 }],
-                duration: "16",
-              },
-              {
-                type: "SONORITY",
-                notes: [
-                  { step: "E", octave: 4 },
-                  { step: "D", octave: 5 },
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "8",
+                    dots: 1,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "E", octave: 4 },
+                      { step: "D", octave: 5 },
+                    ],
+                    duration: "2",
+                    dots: 1,
+                  },
                 ],
-                duration: "2",
-                dots: 1,
               },
             ],
           ],
@@ -154,38 +174,43 @@ const doubleDotted: Score = {
           voices: [
             [
               {
-                type: "SONORITY",
-                notes: [
-                  { step: "C", octave: 5 },
-                  { step: "E", octave: 5 },
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "C", octave: 5 },
+                      { step: "E", octave: 5 },
+                    ],
+                    duration: "4",
+                    dots: 2,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "G", octave: 4 },
+                      { step: "D", octave: 5 },
+                    ],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "E", octave: 4 },
+                      { step: "C", octave: 5 },
+                    ],
+                    duration: "4",
+                    dots: 2,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "E", octave: 4 },
+                      { step: "B", octave: 4 },
+                    ],
+                    duration: "16",
+                  },
                 ],
-                duration: "4",
-                dots: 2,
-              },
-              {
-                type: "SONORITY",
-                notes: [
-                  { step: "G", octave: 4 },
-                  { step: "D", octave: 5 },
-                ],
-                duration: "16",
-              },
-              {
-                type: "SONORITY",
-                notes: [
-                  { step: "E", octave: 4 },
-                  { step: "C", octave: 5 },
-                ],
-                duration: "4",
-                dots: 2,
-              },
-              {
-                type: "SONORITY",
-                notes: [
-                  { step: "E", octave: 4 },
-                  { step: "B", octave: 4 },
-                ],
-                duration: "16",
               },
             ],
           ],
@@ -211,13 +236,18 @@ const simpleThreeFour: Score = {
           voices: [
             [
               {
-                type: "SONORITY",
-                notes: [{ step: "C", octave: 4 }],
-                duration: "4",
-              },
-              {
-                type: "REST",
-                duration: "2",
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 4 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "REST",
+                    duration: "2",
+                  },
+                ],
               },
             ],
           ],
@@ -227,7 +257,6 @@ const simpleThreeFour: Score = {
   ],
 };
 
-// simple score in 6/8 time, you choose the notes.
 const simpleSixEight: Score = {
   name: "simpleSixEight",
   bpm: 120,
@@ -243,34 +272,156 @@ const simpleSixEight: Score = {
           voices: [
             [
               {
-                type: "SONORITY",
-                notes: [{ step: "C", octave: 4 }],
-                duration: "8",
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+export const triplets1: Score = {
+  name: "triplets1",
+  bpm: 120,
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "4",
+                  },
+                ],
               },
               {
-                type: "SONORITY",
-                notes: [{ step: "D", octave: 4 }],
-                duration: "8",
+                type: "TUPLET",
+                numNotes: 3,
+                inTimeOf: 2,
+                unitDuration: "8",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "8",
+                  },
+                ],
+              },
+
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
               },
               {
-                type: "SONORITY",
-                notes: [{ step: "E", octave: 4 }],
-                duration: "8",
+                type: "TUPLET",
+                numNotes: 3,
+                inTimeOf: 2,
+                unitDuration: "8",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "16",
+                  },
+                ],
               },
               {
-                type: "SONORITY",
-                notes: [{ step: "F", octave: 4 }],
-                duration: "8",
-              },
-              {
-                type: "SONORITY",
-                notes: [{ step: "G", octave: 4 }],
-                duration: "8",
-              },
-              {
-                type: "SONORITY",
-                notes: [{ step: "A", octave: 4 }],
-                duration: "8",
+                type: "TUPLET",
+                numNotes: 3,
+                inTimeOf: 2,
+                unitDuration: "8",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "REST",
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "16",
+                  },
+
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
               },
             ],
           ],
@@ -287,6 +438,7 @@ export default [
   doubleDotted,
   simpleThreeFour,
   simpleSixEight,
+  triplets1,
 ];
 
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)

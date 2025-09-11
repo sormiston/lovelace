@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { Renderer, Stave, Formatter } from "vexflow4";
+import { Renderer, Stave, Formatter, Beam, StemmableNote } from "vexflow4";
 import { useEffect, useRef, useState } from "react";
 import compositions from "@/assets/compositions";
 import * as utils from "@/lib";
@@ -99,39 +99,55 @@ function App() {
   useEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
     const renderer = new Renderer(div, Renderer.Backends.SVG);
-    renderer.resize(500, 200);
+    renderer.resize(600, 220);
     const context = renderer.getContext();
 
-    const STAVE_WIDTH = 350; // MAGIC NUMBER!
-    const stave = new Stave(10, 40, STAVE_WIDTH);
-
-    // STAVE CONFIG
-
-    // HARD CODED!  Just one track for now!
+    // HARD CODED: one track / first measure
     const targetMeasure = score.tracks[0].measures[0];
+    const resolvedTimeSig = score.timeSignature;
 
-    const resolvedTimeSig = targetMeasure.timeSignature || score.timeSignature;
+    // 1) Build voices (independent of stave width)
+    const [voices, artifacts] = utils.mapMeasureToVFVoices(
+      targetMeasure,
+      resolvedTimeSig
+    );
+
+    // 2) First pass formatter to find minimal note area (no justification)
+    const firstPass = new Formatter();
+    firstPass.joinVoices(voices).format(voices, 0); // width=0 => no justify
+    const minNoteArea = firstPass.getMinTotalWidth(); // minimal width needed for notes
+
+    // 3) Estimate left glyph (clef + time) width; after drawing we’ll recompute actual note area
+    const LEFT_GLYPHS_EST = 55; // empirical; adjust if needed
+    const RIGHT_PADDING = 20;
+
+    const desiredNoteArea = Math.max(minNoteArea, 220); // enforce a comfortable minimum
+    const STAVE_WIDTH = LEFT_GLYPHS_EST + desiredNoteArea + RIGHT_PADDING;
+
+    const stave = new Stave(10, 40, STAVE_WIDTH);
     stave
       .addClef("treble")
-      .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`);
-    stave.setContext(context).draw();
+      .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
+      .setContext(context)
+      .draw();
 
-    // FORMAT
-    // HARD CODE!  Just one measure for now
-    const voices = utils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig);
-    // dangerous to create new Formatter instances on each callback run?  consider holding as ref
-    const noteArea = stave.getNoteEndX() - stave.getNoteStartX();
-    new Formatter().joinVoices(voices).format(voices, noteArea);
-    // TWEAKS --- may become necessary -- unbeamed 8th note dotes currently hanging far from note heads
-    // voices.forEach((voice) =>
-    //   utils.tweakDots(voice.getTickables().filter((t) => isStaveNote(t)))
-    // );
-    // DRAW
-    voices.forEach(function (v) {
-      v.draw(context, stave);
+    // 4) Second pass: actual available note area between start/end
+    const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5; // slight fudge factor
+    const formatter = new Formatter();
+    formatter.joinVoices(voices).format(voices, actualNoteArea);
+
+    // 5) Draw voices, beams, artifacts
+    const beamsByVoice = voices.map((v) => {
+      const stemmableNotes = v
+        .getTickables()
+        .filter((t) => t instanceof StemmableNote);
+      return Beam.generateBeams(stemmableNotes);
     });
 
-    // CLEAN-UP
+    voices.forEach((v) => v.draw(context, stave));
+    beamsByVoice.flat().forEach((b) => b.setContext(context).draw());
+    artifacts.forEach((a) => a.setContext(context).draw());
+
     return () => {
       const el = document.getElementById("vf");
       if (el) el.innerHTML = "";
