@@ -17,6 +17,8 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
         
       ☐ Tuplets
         ✔ Triplets with rests @done (11/09/2025, 14:26:20)
+        ☐ quintuplets
+        ☐ sextuplets
 
     PHASE 1B: TONAL CONCERNS
     ☐ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):)
@@ -25,6 +27,10 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
 
     PHASE 1C: ENGRAVING AND EXPRESSION CONCERNS
     ✔ [Beam Your Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-4-beam-your-notes--run-) @done (11/09/2025, 14:25:27)
+    ☐ Beam group patterns in compound meters
+      ☐ 6/8
+      ☐ 5/16
+      ☐ 7/8
     ☐ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-)
     ✘ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-) @cancelled (05/09/2025, 12:03:55) -- MOVE TO ANOTHER DEV PHASE
     ☐ [Barlines](https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
@@ -47,7 +53,7 @@ SHOULD-DO ENHANCEMENTS:
   ✔ active and inactive states for control buttons (play, selected score) @done (05/09/2025, 18:10:31)
 
 BUGS: 
-  ☐ Whole bar rests should be centered
+  ✔ Whole bar rests should be centered @done (11/09/2025, 19:20:41)
   ✔ Stem Directions are not being auto-determined unless beamed @done (11/09/2025, 14:52:28)
   ☐ Stem Directions are not being auto-determined by voice
   

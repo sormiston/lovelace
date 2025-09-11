@@ -49,7 +49,6 @@ function App() {
         targetMeasure.timeSignature || score.timeSignature;
       // calclulate how many quarter notes in a bar
       const quarterNotesPerBar = (resolvedTimeSig[0] * 4) / resolvedTimeSig[1];
-      console.log("quarterNotesPerBar", quarterNotesPerBar);
       // build array of metronome click events for one measure
       // e.g., ["0:0:00", "C5"], ["0:1:00", "C5"], ["0:2:00", "C5"], ["0:3:00", "C5"]
       // TODO - handle time signatures with fractional quarter notes (e.g., 6/8)
@@ -67,7 +66,6 @@ function App() {
 
   /** CREATE & SET TONE.JS PLAYBACK PARTS */
   const buildPlaybackPart = () => {
-    console.log("building playback part");
     const targetMeasures = score.tracks[0].measures;
     const bpm = score.bpm;
     const events = utils.measuresToPlayback(targetMeasures, bpm);

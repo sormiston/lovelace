@@ -4,14 +4,19 @@ import type {
   PartEventRich,
   TimeSignature,
   TupletGrouping,
-  NoteContext,
   NoteGrouping,
 } from "@/types";
 
 import { Dot, StaveNote, Tuplet, Voice, Element as VFElement } from "vexflow4";
 
 type Seconds = number;
-function ensureExhaustive(..._args: never[]) {}
+type ToVFVoiceResult = {
+  notes: StaveNote[];
+  artifacts: VFElement[];
+};
+function ensureExhaustive(..._args: never[]) {
+  throw new Error();
+}
 
 export function noteDurationToSeconds(
   { duration, dots }: Durational,
@@ -136,38 +141,62 @@ function noteGroupingToPlayback(
 /**
  * VEXFLOW INTEGRATION
  */
+
+type PostCreateHook = (d: StaveNote) => StaveNote;
+const applyCenterIfBarRest =
+  (timeSig: TimeSignature): PostCreateHook =>
+  (n: StaveNote) => {
+    if (!n.isRest()) return n;
+
+    const [num, den] = timeSig;
+    const voice = new Voice({ num_beats: num, beat_value: den }); // sets totalTicks
+    const barTicks = voice.getTotalTicks(); // Fraction
+    const noteTicks = n.getTicks(); // Fraction
+    const isBarRest = noteTicks.equals(barTicks);
+
+    if (isBarRest) n.setCenterAlignment(true);
+
+    return n;
+  };
+
+function processNoteGroup(
+  ng: NoteGrouping,
+  postCreateHooks: PostCreateHook[]
+): ToVFVoiceResult {
+  const result: ToVFVoiceResult = { notes: [], artifacts: [] };
+  if (ng.type === "SIMPLE") {
+    const notes = ng.members.map((member) =>
+      mapDurationalToStaveNote(member, postCreateHooks)
+    );
+    result.notes = notes;
+  } else if (ng.type === "TUPLET") {
+    const [notes, tuplet] = mapTupletToStaveNotes(ng);
+    result.notes = notes;
+    result.artifacts = [tuplet];
+  } else {
+    ensureExhaustive(ng);
+  }
+
+  return result;
+}
+/** PRINCIPLE FUNCTION CALL / ENTRY POINT FOR VEXFLOW VOICE CREATION */
 export function mapMeasureToVFVoices(
   measure: Measure,
   timeSig: TimeSignature
 ): [Voice[], VFElement[]] {
+  const postCreateHooks = [applyCenterIfBarRest(timeSig)];
+
+  // RUN
   const voices = measure.voices.map((voice) => {
     const data = voice.reduce(
-      (acc, entry) => {
-        switch (entry.type) {
-          case "SIMPLE":
-            acc.notes.push(...mapToStaveNotes(entry.members));
-            break;
-          case "TUPLET":
-            {
-              const [tupletGroupNotes, tupletDrawable] =
-                mapTupletToStaveNotes(entry);
-              acc.notes.push(...tupletGroupNotes);
-              acc.artifacts.push(tupletDrawable);
-            }
-            break;
-
-          default:
-            // all entry types handled
-            ensureExhaustive(entry);
-        }
+      (acc: ToVFVoiceResult, entry: NoteGrouping) => {
+        const { notes, artifacts } = processNoteGroup(entry, postCreateHooks);
+        acc.notes.push(...notes);
+        acc.artifacts.push(...artifacts);
 
         return acc;
       },
-      { notes: [], artifacts: [] } as {
-        // TODO!:  abstract/promote this type if sees much uses
-        notes: StaveNote[];
-        artifacts: VFElement[];
-      }
+      { notes: [], artifacts: [] }
     );
 
     return data;
@@ -182,6 +211,7 @@ export function mapMeasureToVFVoices(
 
       acc.tickedVoices.push(voice);
       acc.artifacts.push(...data.artifacts);
+
       return acc;
     },
     { tickedVoices: [], artifacts: [] } as {
@@ -196,7 +226,7 @@ export function mapMeasureToVFVoices(
 function mapTupletToStaveNotes(
   tupletGroup: TupletGrouping
 ): [StaveNote[], VFElement] {
-  const notes = mapToStaveNotes(tupletGroup.members);
+  const notes = tupletGroup.members.map((m) => mapDurationalToStaveNote(m));
   const tuplet = new Tuplet(notes, {
     num_notes: tupletGroup.numNotes,
     notes_occupied: tupletGroup.inTimeOf,
@@ -205,40 +235,37 @@ function mapTupletToStaveNotes(
   return [notes, tuplet];
 }
 
-function mapToStaveNotes(members: NoteContext["members"]): StaveNote[] {
-  return members.map((member) => mapDurationalToStaveNote(member));
-}
-
-function mapDurationalToStaveNote(d: Durational) {
+function mapDurationalToStaveNote(
+  d: Durational,
+  postCreateHooks?: PostCreateHook[]
+) {
   const isRest = d.type === "REST";
   const keys = isRest
     ? ["b/4"]
     : d.notes.map((n) => `${n.step.toLowerCase()}/${n.octave}`);
   const { duration, dots } = d;
-  if (dots) {
-    const dottedStaveNote = new StaveNote({
-      clef: "treble", // HARD CODED CLEF -- TODO: make dynamic
-      keys,
-      duration,
-      dots,
-      ...(isRest && { type: "r" }),
-      auto_stem: true,
-    });
-
-    for (let i = 0; i < dots; i++) {
-      Dot.buildAndAttach([dottedStaveNote], { all: true });
-    }
-
-    return dottedStaveNote;
-  }
-
-  return new StaveNote({
+  let staveNote = new StaveNote({
     clef: "treble", // HARD CODED CLEF -- TODO: make dynamic
     keys,
     duration,
+    dots,
     ...(isRest && { type: "r" }),
     auto_stem: true,
   });
+
+  if (dots) {
+    for (let i = 0; i < dots; i++) {
+      Dot.buildAndAttach([staveNote], { all: true });
+    }
+  }
+
+  staveNote = postCreateHooks
+    ? postCreateHooks.reduce((acc, curr) => {
+        return curr(acc);
+      }, staveNote)
+    : staveNote;
+
+  return staveNote;
 }
 
 // export function tweakDots(notes: StaveNote[]) {
