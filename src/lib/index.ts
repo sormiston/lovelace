@@ -105,11 +105,11 @@ function noteGroupingToPlayback(
 ): { data: PartEventRich[]; timeDelta: number } {
   let currentTime = offsetTime;
   const playbackData: PartEventRich[] = [];
+  const isTuplet = ng.type === "TUPLET";
   ng.members.forEach((d) => {
-    const tupletContext =
-      ng.type === "TUPLET"
-        ? { numNotes: ng.numNotes, inTimeOf: ng.inTimeOf }
-        : undefined;
+    const tupletContext = isTuplet
+      ? { numNotes: ng.numNotes, inTimeOf: ng.inTimeOf }
+      : undefined;
     const seconds = noteDurationToSeconds(d, bpm, tupletContext);
     if (d.type === "SONORITY") {
       d.notes.forEach((n) => {
