@@ -5,9 +5,12 @@ import compositions from "@/assets/compositions";
 import * as utils from "@/lib";
 import type { PartEventSimple, Score } from "./types";
 
+type Category = keyof typeof compositions;
+
 function App() {
   const [audioCtxStarted, setAudioCtxStarted] = useState(false);
-  const [score, setScore] = useState<Score>(compositions[2]);
+  const [category, setCategory] = useState<Category>("voices");
+  const [score, setScore] = useState<Score>(compositions["voices"][0]);
   const [metronomeActive, setMetronomeActive] = useState(false);
   const [metronomeEvents, setMetronomeEvents] = useState<
     PartEventSimple[] | null
@@ -16,6 +19,9 @@ function App() {
   const synthRef = useRef<Tone.PolySynth | null>(null);
   const clickSynthRef = useRef<Tone.MembraneSynth>(null);
   const metronomeRef = useRef<Tone.Part | null>(null);
+  const categoriesRef = useRef<Category[]>(
+    Object.keys(compositions) as Category[]
+  );
 
   // SYNTH SET-UP / TEARDOWN
   useEffect(() => {
@@ -97,7 +103,8 @@ function App() {
   useEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
     const renderer = new Renderer(div, Renderer.Backends.SVG);
-    renderer.resize(600, 220);
+    const RENDERER_WIDTH = 600;
+    renderer.resize(RENDERER_WIDTH, 220);
     const context = renderer.getContext();
 
     // HARD CODED: one track / first measure
@@ -124,10 +131,13 @@ function App() {
     const STAVE_WIDTH = LEFT_GLYPHS_EST + desiredNoteArea + RIGHT_PADDING;
 
     const stave = new Stave(10, 40, STAVE_WIDTH);
+    const xCenter = (RENDERER_WIDTH - stave.getWidth()) / 2;
+
     stave
       .addClef("treble")
       .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
       .setContext(context)
+      .setX(xCenter)
       .draw();
 
     // Format with actual available note area between start/end
@@ -167,22 +177,32 @@ function App() {
     transport.start();
   };
 
-  const switchComposition = (name: string) => {
-    const foundComposition = compositions.find((c) => c.name === name);
-    if (!foundComposition) throw new Error("Could not find composition");
-    setScore(foundComposition);
+  const compositionsInCategory: Score[] = compositions[category];
+
+  const selectCategory = (cat: Category) => {
+    setCategory(cat);
+  };
+
+  useEffect(() => {
+    const firstInCategory = compositionsInCategory[0];
+    if (firstInCategory) setScore(firstInCategory);
+  }, [compositionsInCategory]);
+
+  const selectComposition = (name: string) => {
+    const target = compositionsInCategory.find((c) => c.name === name);
+    if (target) setScore(target);
   };
 
   return (
-    <main className="flex flex-col justify-center align-center">
+    <main className="flex flex-col justify-center align-center mt-8">
       <div className="space-x-1 mx-auto">
-        {compositions.map(({ name }) => (
-          <CompositionSwitchButton
-            key={name}
-            name={name}
-            handleClick={switchComposition}
+        {categoriesRef.current.map((cat) => (
+          <CompositionCategoryTab
+            key={cat}
+            category={cat}
+            handleClick={() => selectCategory(cat)}
             className={`control-button ${
-              score.name === name ? "control-button--active" : ""
+              category === cat ? "control-button--active" : ""
             }`}
           />
         ))}
@@ -201,7 +221,35 @@ function App() {
           + metronome
         </button>
       </div>
+      <div className="space-x-1 mx-auto mt-4">
+        {compositionsInCategory.map(({ name }) => (
+          <CompositionSwitchButton
+            key={name}
+            name={name}
+            handleClick={selectComposition}
+            className={`control-button ${
+              score.name === name ? "control-button--active" : ""
+            }`}
+          />
+        ))}
+      </div>
     </main>
+  );
+}
+
+function CompositionCategoryTab({
+  category,
+  handleClick,
+  className,
+}: {
+  category: Category;
+  handleClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button onClick={handleClick} className={className}>
+      {category}
+    </button>
   );
 }
 

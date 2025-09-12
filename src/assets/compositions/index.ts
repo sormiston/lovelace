@@ -528,17 +528,24 @@ export const bigTriplets: Score = {
   ],
 };
 
-export default [
-  oneVoice,
-  multiVoice,
-  singleDotted,
-  doubleDotted,
-  simpleThreeFour,
-  simpleSixEight,
-  triplets1,
-  bigTriplets,
-];
+// export default [
+//   oneVoice,
+//   multiVoice,
+//   singleDotted,
+//   doubleDotted,
+//   simpleThreeFour,
+//   simpleSixEight,
+//   triplets1,
+//   bigTriplets,
+// ];
 
+export default {
+  voices: [oneVoice, multiVoice],
+  dotted: [singleDotted, doubleDotted],
+  tuplets: [triplets1, bigTriplets],
+  barRests: [simpleThreeFour],
+  compoundMeter: [simpleSixEight],
+};
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)
 // {
 //   type: "SONORITY",
