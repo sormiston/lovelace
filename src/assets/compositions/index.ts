@@ -241,8 +241,8 @@ const doubleDotted: Score = {
 };
 
 // simple score in 3/4 time, one quarter note + half note rest
-const simpleThreeFour: Score = {
-  name: "simpleThreeFour",
+const threeFourBarRest: Score = {
+  name: "threeFourBarRest",
   bpm: 120,
   keySignature: "C",
   timeSignature: [3, 4],
@@ -258,15 +258,40 @@ const simpleThreeFour: Score = {
               {
                 type: "SIMPLE",
                 members: [
-                  // {
-                  //   type: "SONORITY",
-                  //   notes: [{ step: "C", octave: 4 }],
-                  //   duration: "4",
-                  // },
                   {
                     type: "REST",
-                    duration: "2",
-                    dots: 1,
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const twoTwoBarRest: Score = {
+  name: "twoTwoBarRest",
+  bpm: 120,
+  keySignature: "C",
+  timeSignature: [2, 2],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
                   },
                 ],
               },
@@ -543,7 +568,7 @@ export default {
   voices: [oneVoice, multiVoice],
   dotted: [singleDotted, doubleDotted],
   tuplets: [triplets1, bigTriplets],
-  barRests: [simpleThreeFour],
+  barRests: [twoTwoBarRest, threeFourBarRest],
   compoundMeter: [simpleSixEight],
 };
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)

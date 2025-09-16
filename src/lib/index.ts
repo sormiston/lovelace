@@ -7,7 +7,14 @@ import type {
   NoteGrouping,
 } from "@/types";
 
-import { Dot, StaveNote, Tuplet, Voice, Element as VFElement } from "vexflow4";
+import {
+  Dot,
+  StaveNote,
+  Tuplet,
+  Voice,
+  Element as VFElement,
+  VoiceMode,
+} from "vexflow4";
 
 type Seconds = number;
 type ToVFVoiceResult = {
@@ -143,19 +150,25 @@ function noteGroupingToPlayback(
  */
 
 type PostCreateHook = (d: StaveNote) => StaveNote;
-const applyCenterIfBarRest =
-  (timeSig: TimeSignature): PostCreateHook =>
+const treatAsBarRest =
+  (timeSig: TimeSignature, state: { voiceMode: VoiceMode }): PostCreateHook =>
   (n: StaveNote) => {
     if (!n.isRest()) return n;
 
     const [num, den] = timeSig;
-    const voice = new Voice({ num_beats: num, beat_value: den }); // sets totalTicks
-    const barTicks = voice.getTotalTicks(); // Fraction
-    const noteTicks = n.getTicks(); // Fraction
-    const isBarRest = noteTicks.equals(barTicks);
+    const voice = new Voice({ num_beats: num, beat_value: den }).setMode(
+      Voice.Mode.SOFT
+    );
+    const barTicks = voice.getTotalTicks();
+    const noteTicks = n.getTicks();
+    // If the note's ticks equal OR GREATER THAN the total ticks in the bar, it's a bar rest
+    const isBarRest = noteTicks.greaterThanEquals(barTicks);
 
-    if (isBarRest) n.setCenterAlignment(true);
-
+    if (isBarRest) {
+      n.setCenterAlignment(true);
+      n.setIgnoreTicks(true);
+      state.voiceMode = Voice.Mode.SOFT;
+    }
     return n;
   };
 
@@ -184,7 +197,12 @@ export function mapMeasureToVFVoices(
   measure: Measure,
   timeSig: TimeSignature
 ): [Voice[], VFElement[]] {
-  const postCreateHooks = [applyCenterIfBarRest(timeSig)];
+  // SETUP
+  // STATE IS MUTABLE!  Must be passed to postCreateHooks for configurability we will need later
+  const state = {
+    voiceMode: Voice.Mode.STRICT,
+  };
+  const postCreateHooks = [treatAsBarRest(timeSig, state)];
 
   // RUN
   const voices = measure.voices.map((voice) => {
@@ -207,7 +225,9 @@ export function mapMeasureToVFVoices(
       const voice = new Voice({
         num_beats: timeSig[0],
         beat_value: timeSig[1],
-      }).addTickables(data.notes);
+      })
+        .setMode(state.voiceMode)
+        .addTickables(data.notes);
 
       acc.tickedVoices.push(voice);
       acc.artifacts.push(...data.artifacts);

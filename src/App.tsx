@@ -207,7 +207,7 @@ function App() {
           />
         ))}
       </div>
-      <div id="vf" className="w-fit mx-auto"></div>
+      <div id="vf" className="w-fit mx-auto min-h-56"></div>
       <div className="space-x-1 mx-auto">
         <button onClick={playMidi} className="control-button">
           Play

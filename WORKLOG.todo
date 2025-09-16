@@ -6,14 +6,28 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
       ✔ Dotted rhythms [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-): @done (05/09/2025, 18:33:33)
         ✔ single dotted @done (05/09/2025, 11:42:06)
         ✔ double dotted @done (05/09/2025, 18:33:36)
-      ☐ Time Signatures
+      ✔ Time Signatures - bar rests @done (12/09/2025, 18:40:03)
         ✔ 3/4 @done (09/09/2025, 10:23:37)
-        ☐ 2/2
+        ✔ 2/2 @done (12/09/2025, 18:00:41)
         ✔ 6/8 @done (09/09/2025, 10:23:41)
-        ☐ 7/8
-        ☐ 5/16
+        ✘ 7/8 @cancelled (12/09/2025, 18:39:45)
+        ✘ 5/16 @cancelled (12/09/2025, 18:39:52)
+        ✘ 3/8 @cancelled (12/09/2025, 18:39:55)
+        ✘ 9/8 @cancelled (12/09/2025, 18:39:58)
+
+      ☐ Compound meters
         ☐ 3/8
+        ☐ 6/8
         ☐ 9/8
+      
+      ☐ Mixed meters
+        ☐ 5/16
+        ☐ 5/16 changeable stress pattern
+        ☐ 7/8
+        ☐ 7/8 changeable stress pattern
+        ☐ 10/4
+        ☐ 10/4 changeable stress pattern
+      
         
       ☐ Tuplets
         ✔ Triplets with rests @done (11/09/2025, 14:26:20)
