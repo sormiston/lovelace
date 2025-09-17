@@ -2,7 +2,10 @@ import type { Score } from "@/types";
 
 const oneVoice: Score = {
   name: "oneVoice",
-  bpm: 120,
+  tempo: {
+    bpm: 120,
+    baseDuration: "4",
+  },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [
@@ -69,7 +72,7 @@ const oneVoice: Score = {
 
 const multiVoice: Score = {
   name: "multiVoice",
-  bpm: 120,
+  tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [
@@ -134,7 +137,7 @@ const multiVoice: Score = {
 
 const singleDotted: Score = {
   name: "singleDotted",
-  bpm: 120,
+  tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [
@@ -181,7 +184,7 @@ const singleDotted: Score = {
 
 const doubleDotted: Score = {
   name: "doubleDotted",
-  bpm: 120,
+  tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [
@@ -243,7 +246,7 @@ const doubleDotted: Score = {
 // simple score in 3/4 time, one quarter note + half note rest
 const threeFourBarRest: Score = {
   name: "threeFourBarRest",
-  bpm: 120,
+  tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [3, 4],
   tracks: [
@@ -274,7 +277,7 @@ const threeFourBarRest: Score = {
 
 const twoTwoBarRest: Score = {
   name: "twoTwoBarRest",
-  bpm: 120,
+  tempo: { bpm: 60, baseDuration: "2" },
   keySignature: "C",
   timeSignature: [2, 2],
   tracks: [
@@ -303,9 +306,9 @@ const twoTwoBarRest: Score = {
   ],
 };
 
-const simpleSixEight: Score = {
-  name: "simpleSixEight",
-  bpm: 120,
+const sixEightA: Score = {
+  name: "sixEightA",
+  tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [6, 8],
   tracks: [
@@ -362,7 +365,7 @@ const simpleSixEight: Score = {
 
 export const triplets1: Score = {
   name: "triplets1",
-  bpm: 120,
+  tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [
@@ -480,7 +483,7 @@ export const triplets1: Score = {
 // in this example give a triplet, 3 half notes on a bar
 export const bigTriplets: Score = {
   name: "bigTriplets",
-  bpm: 85,
+  tempo: { bpm: 85, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [
@@ -553,23 +556,240 @@ export const bigTriplets: Score = {
   ],
 };
 
-// export default [
-//   oneVoice,
-//   multiVoice,
-//   singleDotted,
-//   doubleDotted,
-//   simpleThreeFour,
-//   simpleSixEight,
-//   triplets1,
-//   bigTriplets,
-// ];
+// a simple 3/8 score example
+const simpleThreeEight: Score = {
+  name: "simpleThreeEight",
+  tempo: { bpm: 140, baseDuration: "8" },
+  keySignature: "C",
+  timeSignature: [3, 8],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+// a 9/8 bar with rests and subdivisions
+const nineEightA: Score = {
+  name: "nineEightA",
+  tempo: { bpm: 60, baseDuration: "4", compound: true },
+  keySignature: "C",
+  timeSignature: [9, 8],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "REST",
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "REST",
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
+              },
+              {
+                // 2 eighths in the time of 3 (duplet over one dotted-quarter beat)
+                type: "TUPLET",
+                numNotes: 2,
+                inTimeOf: 3,
+                unitDuration: "8",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const sixEightB: Score = {
+  name: "sixEightB",
+  tempo: { bpm: 104, baseDuration: "4", compound: true },
+  keySignature: "C",
+  timeSignature: [6, 8],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 6 }],
+                    duration: "8",
+                    dots: 1,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 6 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 5 }],
+                    duration: "8",
+                    dots: 1,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const twelveEightWRests: Score = {
+  name: "twelveEightWRests",
+  tempo: { bpm: 60, baseDuration: "4", compound: true },
+  keySignature: "C",
+  timeSignature: [12, 8],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "2",
+                    dots: 1,
+                  },
+                  {
+                    type: "REST",
+                    duration: "4",
+                    dots: 1,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "REST",
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export default {
-  voices: [oneVoice, multiVoice],
+  simple: [oneVoice, multiVoice, simpleThreeEight],
   dotted: [singleDotted, doubleDotted],
   tuplets: [triplets1, bigTriplets],
   barRests: [twoTwoBarRest, threeFourBarRest],
-  compoundMeter: [simpleSixEight],
+  compoundMeter: [sixEightA, nineEightA, sixEightB, twelveEightWRests],
 };
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)
 // {

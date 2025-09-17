@@ -3,17 +3,17 @@ import { Renderer, Stave, Formatter, Beam, StemmableNote } from "vexflow4";
 import { useEffect, useRef, useState } from "react";
 import compositions from "@/assets/compositions";
 import * as utils from "@/lib";
-import type { PartEventSimple, Score } from "./types";
+import type { PartEventRich, Score } from "./types";
 
 type Category = keyof typeof compositions;
 
 function App() {
   const [audioCtxStarted, setAudioCtxStarted] = useState(false);
-  const [category, setCategory] = useState<Category>("voices");
-  const [score, setScore] = useState<Score>(compositions["voices"][0]);
+  const [category, setCategory] = useState<Category>("simple");
+  const [score, setScore] = useState<Score>(compositions["simple"][0]);
   const [metronomeActive, setMetronomeActive] = useState(false);
   const [metronomeEvents, setMetronomeEvents] = useState<
-    PartEventSimple[] | null
+    PartEventRich[] | null
   >(null);
   const partRef = useRef<Tone.Part | null>(null);
   const synthRef = useRef<Tone.PolySynth | null>(null);
@@ -53,16 +53,9 @@ function App() {
       const targetMeasure = score.tracks[0].measures[0];
       const resolvedTimeSig =
         targetMeasure.timeSignature || score.timeSignature;
-      // calclulate how many quarter notes in a bar
-      const quarterNotesPerBar = (resolvedTimeSig[0] * 4) / resolvedTimeSig[1];
-      // build array of metronome click events for one measure
-      // e.g., ["0:0:00", "C5"], ["0:1:00", "C5"], ["0:2:00", "C5"], ["0:3:00", "C5"]
-      // TODO - handle time signatures with fractional quarter notes (e.g., 6/8)
-      setMetronomeEvents(
-        new Array(quarterNotesPerBar)
-          .fill(null)
-          .map((_, i) => [`0:${i}:00`, "C5"])
-      );
+
+      const events = utils.generateClickTrack(score.tempo, resolvedTimeSig);
+      setMetronomeEvents(events);
     }
 
     return () => {
@@ -73,28 +66,33 @@ function App() {
   /** CREATE & SET TONE.JS PLAYBACK PARTS */
   const buildPlaybackPart = () => {
     const targetMeasures = score.tracks[0].measures;
-    const bpm = score.bpm;
-    const events = utils.measuresToPlayback(targetMeasures, bpm);
-
-    if (!events) return;
+    const tempoResolved = targetMeasures[0].tempo || score.tempo;
+    const events = utils.measuresToPlayback(targetMeasures, tempoResolved);
 
     // Clean up existing part
     if (partRef.current) partRef.current.dispose();
 
     // Create main playback part
-    partRef.current = new Tone.Part((time, ev) => {
-      synthRef.current?.triggerAttackRelease(
-        `${ev.step}${ev.accidental || ""}${ev.octave}`,
-        ev.duration,
-        time,
-        ev.velocity
-      );
-    }, events).start(0);
+    if (events) {
+      partRef.current = new Tone.Part((time, ev) => {
+        synthRef.current?.triggerAttackRelease(
+          `${ev.step}${ev.accidental || ""}${ev.octave}`,
+          ev.duration,
+          time,
+          ev.velocity
+        );
+      }, events).start(0);
+    }
 
     if (metronomeRef.current) metronomeRef.current.dispose();
     if (metronomeActive && metronomeEvents) {
-      metronomeRef.current = new Tone.Part((time, note) => {
-        clickSynthRef.current?.triggerAttackRelease(note, "32n", time);
+      metronomeRef.current = new Tone.Part((time, ev) => {
+        clickSynthRef.current?.triggerAttackRelease(
+          `${ev.step}${ev.octave}`,
+          ev.duration,
+          time,
+          ev.velocity
+        );
       }, metronomeEvents).start(0);
     }
   };
@@ -110,6 +108,7 @@ function App() {
     // HARD CODED: one track / first measure
     const targetMeasure = score.tracks[0].measures[0];
     const resolvedTimeSig = score.timeSignature;
+    const resolvedTempo = targetMeasure.tempo || score.tempo;
 
     // Build voices
     const [voices, artifacts] = utils.mapMeasureToVFVoices(
@@ -130,26 +129,32 @@ function App() {
     const desiredNoteArea = Math.max(minNoteArea, 200);
     const STAVE_WIDTH = LEFT_GLYPHS_EST + desiredNoteArea + RIGHT_PADDING;
 
-    const stave = new Stave(10, 40, STAVE_WIDTH);
+    let stave = new Stave(10, 40, STAVE_WIDTH);
     const xCenter = (RENDERER_WIDTH - stave.getWidth()) / 2;
 
     stave
       .addClef("treble")
       .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
       .setContext(context)
-      .setX(xCenter)
-      .draw();
+      .setX(xCenter);
+
+    // my own stave processing middlewares
+    stave = utils.attachStaveTempo(stave, resolvedTempo);
+
+    // DRAW STAVE
+    stave.draw();
 
     // Format with actual available note area between start/end
     const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5;
     formatter.format(voices, actualNoteArea);
 
     // Draw voices, beams, artifacts
+    const beamConfig = utils.generateBeamConfig(resolvedTimeSig);
     const beamsByVoice = voices.map((v) => {
       const stemmableNotes = v
         .getTickables()
         .filter((t) => t instanceof StemmableNote);
-      return Beam.generateBeams(stemmableNotes);
+      return Beam.generateBeams(stemmableNotes, beamConfig);
     });
 
     voices.forEach((v) => v.draw(context, stave));
@@ -170,7 +175,7 @@ function App() {
 
     const transport = Tone.getTransport();
     transport.cancel();
-    transport.bpm.value = score.bpm;
+    transport.bpm.value = score.tempo.bpm;
     transport.position = "0:0";
 
     buildPlaybackPart();

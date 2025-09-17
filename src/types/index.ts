@@ -1,4 +1,4 @@
-import { TransportTimeClass } from "tone";
+
 // Basic musical elements
 export type BaseDuration = "1" | "2" | "4" | "8" | "16" | "32" | "64" | "128";
 export type Step = "C" | "D" | "E" | "F" | "G" | "A" | "B";
@@ -47,10 +47,16 @@ export type NoteGrouping = SimpleGrouping | TupletGrouping;
 export type Durational = Rest | Sonority;
 export type VoiceLine = NoteGrouping[];
 export type TimeSignature = [number, number];
+export type Tempo = {
+  bpm: number;
+  baseDuration: BaseDuration;
+  compound?: boolean;
+};
 
 export type Measure = {
   number: number;
   timeSignature?: TimeSignature;
+  tempo?: Tempo;
   voices: VoiceLine[];
 };
 
@@ -63,9 +69,9 @@ export type Track = {
 
 export type Score = {
   name: string;
-  bpm: number;
   keySignature: string; // e.g., "C", "Gm"
   timeSignature: TimeSignature;
+  tempo: Tempo;
   tracks: Track[];
 };
 
@@ -78,7 +84,3 @@ export type PartEventRich = [
   } & Pitch
 ];
 
-export type PartEventSimple = [
-  ReturnType<TransportTimeClass["toBarsBeatsSixteenths"]>,
-  `${Step}${Octave}`
-];

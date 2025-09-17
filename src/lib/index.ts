@@ -5,6 +5,7 @@ import type {
   TimeSignature,
   TupletGrouping,
   NoteGrouping,
+  Tempo,
 } from "@/types";
 
 import {
@@ -14,6 +15,9 @@ import {
   Voice,
   Element as VFElement,
   VoiceMode,
+  Beam,
+  StaveTempo,
+  Stave,
 } from "vexflow4";
 
 type Seconds = number;
@@ -27,61 +31,70 @@ function ensureExhaustive(..._args: never[]) {
 
 export function noteDurationToSeconds(
   { duration, dots }: Durational,
-  bpm: number,
+  tempo: Tempo,
   tupletContext: { numNotes: number; inTimeOf: number } = {
     numNotes: 1,
     inTimeOf: 1,
   }
 ): Seconds {
-  const beatDuration = 60 / bpm;
-  let baseDuration = 0;
-  switch (duration) {
-    case "1":
-      baseDuration = 4 * beatDuration;
-      break;
-    case "2":
-      baseDuration = 2 * beatDuration;
-      break;
-    case "4":
-      baseDuration = 1 * beatDuration;
-      break;
-    case "8":
-      baseDuration = 0.5 * beatDuration;
-      break;
-    case "16":
-      baseDuration = 0.25 * beatDuration;
-      break;
-    case "32":
-      baseDuration = 0.125 * beatDuration;
-      break;
-    case "64":
-      baseDuration = 0.0625 * beatDuration;
-      break;
-    case "128":
-      baseDuration = 0.03125 * beatDuration;
-      break;
-    default:
-      ensureExhaustive(duration);
-  }
+  const noteDuration = tempo.compound
+    ? Number(duration) * 1.5
+    : Number(duration);
+  const beatUnit = Number(tempo.baseDuration);
+  const beatUnitDuration = 60 / tempo.bpm;
+  let durationSeconds = (beatUnit / noteDuration) * beatUnitDuration;
 
-  const originalBaseDuration = baseDuration;
+  const originalDurationSeconds = durationSeconds;
 
   // Dot modification
   if (dots && dots > 0) {
     for (let i = 0; i < dots; i++) {
-      baseDuration += originalBaseDuration / Math.pow(2, i + 1);
+      durationSeconds += originalDurationSeconds / Math.pow(2, i + 1);
     }
   }
 
   // Tuplet modification
-  baseDuration *= tupletContext.inTimeOf / tupletContext.numNotes;
+  durationSeconds *= tupletContext.inTimeOf / tupletContext.numNotes;
 
-  return baseDuration;
+  return durationSeconds;
+}
+
+export function generateClickTrack(
+  tempo: Tempo,
+  timeSig: TimeSignature
+): PartEventRich[] {
+  const playbackData: PartEventRich[] = [];
+  let currentTime = 0;
+
+  const numBeats = tempo.compound ? timeSig[0] / 3 : timeSig[0];
+  for (let i = 0; i < numBeats; i++) {
+    playbackData.push([
+      currentTime,
+      {
+        duration: 0.2,
+        velocity: 0.8,
+        step: "C",
+        octave: 5,
+      },
+    ]);
+
+    const timeDelta = noteDurationToSeconds(
+      {
+        duration: tempo.baseDuration,
+        ...(tempo.compound && { dots: 1 }),
+      } as Durational,
+      tempo
+    );
+
+    currentTime += timeDelta;
+  }
+
+  return playbackData;
 }
 
 export function measuresToPlayback(
   measures: Measure[],
-  bpm: number
+  tempo: Tempo
 ): PartEventRich[] | null {
   if (measures.length === 0) return null;
 
@@ -92,7 +105,7 @@ export function measuresToPlayback(
       voice.forEach((ng) => {
         const { data, timeDelta } = noteGroupingToPlayback(
           ng,
-          bpm,
+          tempo,
           currentTime
         );
         playbackData.push(...data);
@@ -107,7 +120,7 @@ export function measuresToPlayback(
 
 function noteGroupingToPlayback(
   ng: NoteGrouping,
-  bpm: number,
+  tempo: Tempo,
   offsetTime: number
 ): { data: PartEventRich[]; timeDelta: number } {
   let currentTime = offsetTime;
@@ -117,7 +130,7 @@ function noteGroupingToPlayback(
     const tupletContext = isTuplet
       ? { numNotes: ng.numNotes, inTimeOf: ng.inTimeOf }
       : undefined;
-    const seconds = noteDurationToSeconds(d, bpm, tupletContext);
+    const seconds = noteDurationToSeconds(d, tempo, tupletContext);
     if (d.type === "SONORITY") {
       d.notes.forEach((n) => {
         playbackData.push([
@@ -288,13 +301,34 @@ function mapDurationalToStaveNote(
   return staveNote;
 }
 
-// export function tweakDots(notes: StaveNote[]) {
-//   notes.forEach((note) => {
-//     note.getModifiersByType("Dot").forEach((dot) => {
-//       if (note.getDuration() === "8") {
-//         dot.setXShift(dot.getXShift() - 10);
-//         dot.setYShift(6);
-//       }
-//     });
-//   });
-// }
+type BeamConfig = Parameters<typeof Beam.generateBeams>[1];
+export function generateBeamConfig([num, den]: TimeSignature): BeamConfig {
+  /**
+   * getDefaultBeamGroups is a VexFlow utility that provides standard beam groupings
+   * https://github.com/0xfe/vexflow/blob/master/src/beam.ts#L98
+   */
+  const defaultGroups = Beam.getDefaultBeamGroups(`${num}/${den}`);
+
+  return {
+    groups: defaultGroups,
+    beam_middle_only: true,
+    beam_rests: true,
+  };
+}
+
+export function attachStaveTempo(stave: Stave, tempo: Tempo) {
+  if (!tempo) return stave;
+  const staveTempo = new StaveTempo(
+    {
+      duration: tempo.baseDuration,
+      ...(tempo.compound && { dots: 1 }),
+      bpm: tempo.bpm,
+    },
+    0, 
+    -10
+  );
+
+  stave.addModifier(staveTempo); 
+
+  return stave;
+}
