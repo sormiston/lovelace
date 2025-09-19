@@ -22,7 +22,7 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
         ✔ 12/8 @done (17/09/2025, 15:01:28)
         ✔ with rests @done (17/09/2025, 15:01:50)
       
-      ☐ Mixed meters
+      ✘ Mixed meters @cancelled (19/09/2025, 12:05:44)
         ☐ 5/16
         ☐ 5/16 changeable stress pattern
         ☐ 7/8
@@ -31,10 +31,10 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
         ☐ 10/4 changeable stress pattern
       
         
-      ☐ Tuplets
+      ✔ Tuplets @done (19/09/2025, 12:06:03)
         ✔ Triplets with rests @done (11/09/2025, 14:26:20)
-        ☐ quintuplets
-        ☐ sextuplets
+        ✔ quintuplets & sextuplets @done (19/09/2025, 12:05:59)
+     
 
     PHASE 1B: TONAL CONCERNS
     ☐ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):)
@@ -73,6 +73,7 @@ BUGS:
   ✔ Stem Directions are not being auto-determined unless beamed @done (11/09/2025, 14:52:28)
   ☐ 3 - Stem Directions are not being auto-determined by voice
   ✔ 1 - no metronome clicks on bar rest examples @done (17/09/2025, 14:42:00)
+  ☐ 5 - advanced tuplets (see quintSext) all whacky engraving (beaming and brackets and text display of ratio)
   
 TECH DEBT:
   ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)

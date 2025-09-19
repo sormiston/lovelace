@@ -784,10 +784,148 @@ const twelveEightWRests: Score = {
   ],
 };
 
+// include quintuplets and sextuplets in this example
+const quintSext: Score = {
+  name: "quintSext",
+  tempo: { bpm: 72, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "TUPLET",
+                numNotes: 5,
+                inTimeOf: 4,
+                unitDuration: "16",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 5 }],
+                    duration: "16",
+                  },
+                ],
+              },
+              {
+                type: "TUPLET",
+                numNotes: 5,
+                inTimeOf: 4,
+                unitDuration: "8",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 6 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 6 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 6 }],
+                    duration: "8",
+                  },
+                ],
+              },
+              // {
+              //   type: "SIMPLE",
+              //   members: [
+              //     {
+              //       type: "SONORITY",
+              //       notes: [{ step: "F", octave: 5 }],
+              //       duration: "8",
+              //     },
+              //   ],
+              // },
+
+              {
+                type: "TUPLET",
+                numNotes: 6,
+                inTimeOf: 4,
+                unitDuration: "16",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "16",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 export default {
   simple: [oneVoice, multiVoice, simpleThreeEight],
   dotted: [singleDotted, doubleDotted],
-  tuplets: [triplets1, bigTriplets],
+  tuplets: [triplets1, bigTriplets, quintSext],
   barRests: [twoTwoBarRest, threeFourBarRest],
   compoundMeter: [sixEightA, nineEightA, sixEightB, twelveEightWRests],
 };
