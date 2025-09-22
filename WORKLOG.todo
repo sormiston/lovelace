@@ -35,6 +35,7 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
         ✔ Triplets with rests @done (11/09/2025, 14:26:20)
         ✔ quintuplets & sextuplets @done (19/09/2025, 12:05:59)
      
+     ☐ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-)
 
     PHASE 1B: TONAL CONCERNS
     ✘ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):) @cancelled (22/09/2025, 13:25:59)
@@ -48,12 +49,19 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
       ✔ 6/8 @done (17/09/2025, 14:41:48)
       ☐ 5/16
       ☐ 7/8
-    ☐ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-)
+   
     ✘ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-) @cancelled (05/09/2025, 12:03:55) -- MOVE TO ANOTHER DEV PHASE
     ☐ [Barlines](https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
     ☐ Change synth for sampler and implement instrument selection
     ☐ mid-measure clef changes
     ☐ mid-measure key changes
+    
+    PHASE 1D: MULTI-MEASURE SUPPORT
+    ☐ Basic
+    ☐ With ties over barlines
+    ☐ change of time signature
+    ☐ change of key signature
+    
     
 
 Phase 2: User Create Flows
