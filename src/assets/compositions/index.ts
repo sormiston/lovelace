@@ -8,6 +8,7 @@ const oneVoice: Score = {
   },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -75,6 +76,7 @@ const multiVoice: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -140,6 +142,7 @@ const singleDotted: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -187,6 +190,7 @@ const doubleDotted: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -249,6 +253,7 @@ const threeFourBarRest: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [3, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -280,6 +285,7 @@ const twoTwoBarRest: Score = {
   tempo: { bpm: 60, baseDuration: "2" },
   keySignature: "C",
   timeSignature: [2, 2],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -311,6 +317,7 @@ const sixEightA: Score = {
   tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [6, 8],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -368,6 +375,7 @@ export const triplets1: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -486,6 +494,7 @@ export const bigTriplets: Score = {
   tempo: { bpm: 85, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -562,6 +571,7 @@ const simpleThreeEight: Score = {
   tempo: { bpm: 140, baseDuration: "8" },
   keySignature: "C",
   timeSignature: [3, 8],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -605,6 +615,7 @@ const nineEightA: Score = {
   tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [9, 8],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -684,6 +695,7 @@ const sixEightB: Score = {
   tempo: { bpm: 104, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [6, 8],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -743,6 +755,7 @@ const twelveEightWRests: Score = {
   tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [12, 8],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -790,6 +803,7 @@ const quintSext: Score = {
   tempo: { bpm: 72, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -927,6 +941,7 @@ const eMajorScale: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "E",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -994,6 +1009,7 @@ const cSMelMinScale: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C#m",
   timeSignature: [4, 4],
+  clef: "tenor",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -1096,6 +1112,7 @@ const appliedCMaj: Score = {
   tempo: { bpm: 50, baseDuration: "4" },
   keySignature: "Ab",
   timeSignature: [4, 4],
+  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -1157,11 +1174,12 @@ const appliedCMaj: Score = {
   ],
 };
 
-const fSharpHarMinorScale: Score = {
-  name: "fSharpHarMinorScale",
+const fSHarMScale: Score = {
+  name: "fSHarMScale",
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "F#m",
   timeSignature: [4, 4],
+  clef: "alto",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -1176,78 +1194,128 @@ const fSharpHarMinorScale: Score = {
                 members: [
                   {
                     type: "SONORITY",
-                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    notes: [{ step: "F", accidental: "#", octave: 3 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
-                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    notes: [{ step: "G", accidental: "#", octave: 3 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
-                    notes: [{ step: "A", octave: 4 }],
+                    notes: [{ step: "A", octave: 3 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
-                    notes: [{ step: "B", octave: 4 }],
+                    notes: [{ step: "B", octave: 3 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
-                    notes: [{ step: "C", accidental: "#", octave: 5 }],
+                    notes: [{ step: "C", accidental: "#", octave: 4 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
-                    notes: [{ step: "D", octave: 5 }],
+                    notes: [{ step: "D", octave: 4 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
-                    notes: [{ step: "E", accidental: "#", octave: 5 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "F", accidental: "#", octave: 5 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "E", accidental: "#", octave: 5 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "D", octave: 5 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "C", accidental: "#", octave: 5 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "B", octave: 4 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "A", octave: 4 }],
-                    duration: "16",
-                  },
-                  {
-                    type: "SONORITY",
-                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    notes: [{ step: "E", accidental: "#", octave: 4 }],
                     duration: "16",
                   },
                   {
                     type: "SONORITY",
                     notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 3 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 3 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", accidental: "#", octave: 3 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 3 }],
                     duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const bassClef: Score = {
+  name: "bassClef",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "Bb",
+  timeSignature: [4, 4],
+  clef: "treble",
+  tracks: [
+    {
+      name: "Piano Left Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          clef: "bass",
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", accidental: "b", octave: 3 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", accidental: "b", octave: 4 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 4 }],
+                    duration: "4",
+                  },
+
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", accidental: "b", octave: 4 }],
+                    duration: "4",
                   },
                 ],
               },
@@ -1265,7 +1333,13 @@ export default {
   tuplets: [triplets1, bigTriplets, quintSext],
   barRests: [twoTwoBarRest, threeFourBarRest],
   compoundMeter: [sixEightA, nineEightA, sixEightB, twelveEightWRests],
-  tonality: [eMajorScale, cSMelMinScale, appliedCMaj, fSharpHarMinorScale],
+  tonality: [
+    eMajorScale,
+    cSMelMinScale,
+    appliedCMaj,
+    fSHarMScale,
+    bassClef,
+  ],
 };
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)
 // {

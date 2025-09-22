@@ -6,6 +6,7 @@ import type {
   TupletGrouping,
   NoteGrouping,
   Tempo,
+  ClefNames,
 } from "@/types";
 
 import type { RenderContext } from "vexflow4";
@@ -186,19 +187,21 @@ const treatAsBarRest =
     }
     return n;
   };
+type NoteGroupingWithClef = NoteGrouping & { clef: ClefNames };
 
 function processNoteGroup(
-  ng: NoteGrouping,
+  ng: NoteGroupingWithClef,
   postCreateHooks: PostCreateHook[]
 ): ToVFVoiceResult {
   const result: ToVFVoiceResult = { notes: [], artifacts: [] };
+  const { clef } = ng;
   if (ng.type === "SIMPLE") {
     const notes = ng.members.map((member) =>
-      mapDurationalToStaveNote(member, postCreateHooks)
+      mapDurationalToStaveNote(member, clef, postCreateHooks)
     );
     result.notes = notes;
   } else if (ng.type === "TUPLET") {
-    const [notes, tuplet] = mapTupletToStaveNotes(ng);
+    const [notes, tuplet] = mapTupletToStaveNotes(ng, clef);
     result.notes = notes;
     result.artifacts = [tuplet];
   } else {
@@ -210,7 +213,8 @@ function processNoteGroup(
 /** PRINCIPLE FUNCTION CALL / ENTRY POINT FOR VEXFLOW VOICE CREATION */
 export function mapMeasureToVFVoices(
   measure: Measure,
-  timeSig: TimeSignature
+  timeSig: TimeSignature,
+  clef: ClefNames
 ): [Voice[], VFElement[]] {
   // SETUP
   // STATE IS MUTABLE!  Must be passed to postCreateHooks for configurability we will need later
@@ -223,7 +227,10 @@ export function mapMeasureToVFVoices(
   const voices = measure.voices.map((voice) => {
     const data = voice.reduce(
       (acc: ToVFVoiceResult, entry: NoteGrouping) => {
-        const { notes, artifacts } = processNoteGroup(entry, postCreateHooks);
+        const { notes, artifacts } = processNoteGroup(
+          { ...entry, clef },
+          postCreateHooks
+        );
         acc.notes.push(...notes);
         acc.artifacts.push(...artifacts);
 
@@ -259,9 +266,12 @@ export function mapMeasureToVFVoices(
 }
 
 function mapTupletToStaveNotes(
-  tupletGroup: TupletGrouping
+  tupletGroup: TupletGrouping,
+  clef: ClefNames
 ): [StaveNote[], VFElement] {
-  const notes = tupletGroup.members.map((m) => mapDurationalToStaveNote(m));
+  const notes = tupletGroup.members.map((m) =>
+    mapDurationalToStaveNote(m, clef)
+  );
   const tuplet = new Tuplet(notes, {
     num_notes: tupletGroup.numNotes,
     notes_occupied: tupletGroup.inTimeOf,
@@ -272,6 +282,7 @@ function mapTupletToStaveNotes(
 
 function mapDurationalToStaveNote(
   d: Durational,
+  clef: ClefNames,
   postCreateHooks?: PostCreateHook[]
 ) {
   const isRest = d.type === "REST";
@@ -282,7 +293,7 @@ function mapDurationalToStaveNote(
       );
   const { duration, dots } = d;
   let staveNote = new StaveNote({
-    clef: "treble", // HARD CODED CLEF -- TODO: make dynamic
+    clef,
     keys,
     duration,
     dots,

@@ -112,11 +112,13 @@ function App() {
     const resolvedTimeSig = score.timeSignature;
     const resolvedTempo = targetMeasure.tempo || score.tempo;
     const resolvedKeySig = targetMeasure.keySignature || score.keySignature;
+    const resolvedClef = targetMeasure.clef || score.clef;
 
     // Build voices
     const [voices, artifacts] = utils.mapMeasureToVFVoices(
       targetMeasure,
-      resolvedTimeSig
+      resolvedTimeSig,
+      resolvedClef
     );
 
     Accidental.applyAccidentals(voices, resolvedKeySig);
@@ -127,22 +129,22 @@ function App() {
       .joinVoices(voices)
       .preCalculateMinTotalWidth(voices);
 
-    // Calculate clef/time glyph width; size stave accordingly 
-    const LEFT_GLYPHS_EST = utils.measureCombo({
-      clef: "treble",
+    // Calculate clef/time glyph width; size stave accordingly
+    const leftGlyphWidth = utils.measureCombo({
+      clef: resolvedClef,
       key: resolvedKeySig,
       time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,
     });
     const RIGHT_PADDING = 20;
 
     const desiredNoteArea = Math.max(minNoteArea, 200);
-    const STAVE_WIDTH = LEFT_GLYPHS_EST + desiredNoteArea + RIGHT_PADDING;
+    const staveWidth = leftGlyphWidth + desiredNoteArea + RIGHT_PADDING;
 
-    let stave = new Stave(10, 40, STAVE_WIDTH);
+    let stave = new Stave(10, 40, staveWidth);
     const xCenter = (RENDERER_WIDTH - stave.getWidth()) / 2;
 
     stave
-      .addClef("treble")
+      .addClef(resolvedClef)
       .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
       .addKeySignature(resolvedKeySig)
       .setContext(context)
