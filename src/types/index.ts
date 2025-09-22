@@ -1,4 +1,3 @@
-
 // Basic musical elements
 export type BaseDuration = "1" | "2" | "4" | "8" | "16" | "32" | "64" | "128";
 export type Step = "C" | "D" | "E" | "F" | "G" | "A" | "B";
@@ -56,6 +55,7 @@ export type Tempo = {
 export type Measure = {
   number: number;
   timeSignature?: TimeSignature;
+  keySignature?: string; // e.g., "C", "Gm"
   tempo?: Tempo;
   voices: VoiceLine[];
 };
@@ -83,4 +83,3 @@ export type PartEventRich = [
     velocity: number;
   } & Pitch
 ];
-

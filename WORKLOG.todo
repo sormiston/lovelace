@@ -37,8 +37,9 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
      
 
     PHASE 1B: TONAL CONCERNS
-    ☐ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):)
-    ☐ Key Signatures + "in-key" accidentals
+    ✘ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):) @cancelled (22/09/2025, 13:25:59)
+    ✔ Key Signatures + "in-key" accidentals @done (22/09/2025, 14:51:37)
+      ✔ layout measurement to account for larger or smaller key signatures (LEFT GLYPH pixel space) @done (22/09/2025, 14:51:43)
     ☐ Clefs
 
     PHASE 1C: ENGRAVING AND EXPRESSION CONCERNS
@@ -51,6 +52,8 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
     ✘ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-) @cancelled (05/09/2025, 12:03:55) -- MOVE TO ANOTHER DEV PHASE
     ☐ [Barlines](https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
     ☐ Change synth for sampler and implement instrument selection
+    ☐ mid-measure clef changes
+    ☐ mid-measure key changes
     
 
 Phase 2: User Create Flows

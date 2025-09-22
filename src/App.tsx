@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { Renderer, Stave, Formatter, Beam, StemmableNote } from "vexflow4";
+import { Stave, Formatter, Beam, StemmableNote, Accidental } from "vexflow4";
 import { useEffect, useRef, useState } from "react";
 import compositions from "@/assets/compositions";
 import * as utils from "@/lib";
@@ -100,15 +100,18 @@ function App() {
   /** VEXFLOW RENDER EFFECT - DEPS: SCORE*/
   useEffect(() => {
     const div = document.getElementById("vf") as HTMLDivElement;
-    const renderer = new Renderer(div, Renderer.Backends.SVG);
-    const RENDERER_WIDTH = 600;
-    renderer.resize(RENDERER_WIDTH, 220);
-    const context = renderer.getContext();
+    if (!div) return;
+    const RENDERER_WIDTH = 650;
+    const context = utils.makeContext(
+      { width: RENDERER_WIDTH, height: 220 },
+      div
+    );
 
     // HARD CODED: one track / first measure
     const targetMeasure = score.tracks[0].measures[0];
     const resolvedTimeSig = score.timeSignature;
     const resolvedTempo = targetMeasure.tempo || score.tempo;
+    const resolvedKeySig = targetMeasure.keySignature || score.keySignature;
 
     // Build voices
     const [voices, artifacts] = utils.mapMeasureToVFVoices(
@@ -116,14 +119,20 @@ function App() {
       resolvedTimeSig
     );
 
+    Accidental.applyAccidentals(voices, resolvedKeySig);
+
     // Pre-calc minimal note area (no justification)
     const formatter = new Formatter();
     const minNoteArea = formatter
       .joinVoices(voices)
       .preCalculateMinTotalWidth(voices);
 
-    // Estimate clef/time glyph width; size stave accordingly
-    const LEFT_GLYPHS_EST = 55;
+    // Calculate clef/time glyph width; size stave accordingly 
+    const LEFT_GLYPHS_EST = utils.measureCombo({
+      clef: "treble",
+      key: resolvedKeySig,
+      time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,
+    });
     const RIGHT_PADDING = 20;
 
     const desiredNoteArea = Math.max(minNoteArea, 200);
@@ -135,6 +144,7 @@ function App() {
     stave
       .addClef("treble")
       .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
+      .addKeySignature(resolvedKeySig)
       .setContext(context)
       .setX(xCenter);
 

@@ -922,12 +922,350 @@ const quintSext: Score = {
   ],
 };
 
+const eMajorScale: Score = {
+  name: "eMajorScale",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "E",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", accidental: "#", octave: 5 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 5 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const cSMelMinScale: Score = {
+  name: "cSharpMinorScale",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C#m",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 4 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const appliedCMaj: Score = {
+  name: "appliedCMaj",
+  tempo: { bpm: 50, baseDuration: "4" },
+  keySignature: "Ab",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "E", accidental: "b", octave: 4 },
+                      { step: "A", accidental: "b", octave: 4 },
+                      { step: "C", octave: 5 },
+                    ],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "D", octave: 4 },
+                      { step: "F", octave: 4 },
+                      { step: "A", octave: 4 },
+                      { step: "C", octave: 5 },
+                    ],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "D", octave: 4 },
+                      { step: "F", octave: 4 },
+                      { step: "G", octave: 4 },
+                      { step: "B", octave: 4 },
+                    ],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "C", octave: 4 },
+                      { step: "E", octave: 4 },
+                      { step: "G", octave: 4 },
+                      { step: "B", octave: 4 },
+                    ],
+                    duration: "4",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const fSharpHarMinorScale: Score = {
+  name: "fSharpHarMinorScale",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "F#m",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", accidental: "#", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", accidental: "#", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", accidental: "#", octave: 5 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "A", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", accidental: "#", octave: 4 }],
+                    duration: "16",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "8",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 export default {
   simple: [oneVoice, multiVoice, simpleThreeEight],
   dotted: [singleDotted, doubleDotted],
   tuplets: [triplets1, bigTriplets, quintSext],
   barRests: [twoTwoBarRest, threeFourBarRest],
   compoundMeter: [sixEightA, nineEightA, sixEightB, twelveEightWRests],
+  tonality: [eMajorScale, cSMelMinScale, appliedCMaj, fSharpHarMinorScale],
 };
 // 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)
 // {

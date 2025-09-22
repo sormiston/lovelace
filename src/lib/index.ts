@@ -8,6 +8,7 @@ import type {
   Tempo,
 } from "@/types";
 
+import type { RenderContext } from "vexflow4";
 import {
   Dot,
   StaveNote,
@@ -18,6 +19,7 @@ import {
   Beam,
   StaveTempo,
   Stave,
+  Renderer,
 } from "vexflow4";
 
 type Seconds = number;
@@ -275,7 +277,9 @@ function mapDurationalToStaveNote(
   const isRest = d.type === "REST";
   const keys = isRest
     ? ["b/4"]
-    : d.notes.map((n) => `${n.step.toLowerCase()}/${n.octave}`);
+    : d.notes.map(
+        (n) => `${n.step.toLowerCase()}${n.accidental || ""}/${n.octave}`
+      );
   const { duration, dots } = d;
   let staveNote = new StaveNote({
     clef: "treble", // HARD CODED CLEF -- TODO: make dynamic
@@ -324,11 +328,73 @@ export function attachStaveTempo(stave: Stave, tempo: Tempo) {
       ...(tempo.compound && { dots: 1 }),
       bpm: tempo.bpm,
     },
-    0, 
+    0,
     -10
   );
 
-  stave.addModifier(staveTempo); 
+  stave.addModifier(staveTempo);
 
   return stave;
+}
+
+type SetupFn = (s: Stave) => void;
+type ContextSetup = { width: number; height: number };
+/**
+ * Create a VexFlow rendering context.
+ * If no rootDiv is provided, an offscreen div will be created.
+ */
+export function makeContext(
+  { width, height }: ContextSetup,
+  rootDiv?: HTMLDivElement
+): RenderContext {
+  // You can render offscreen by not attaching this DIV to the DOM.
+  const div = rootDiv || document.createElement("div");
+  const renderer = new Renderer(div, Renderer.Backends.SVG);
+  renderer.resize(width, height);
+  return renderer.getContext();
+}
+
+/**
+ * Measures how many pixels the given setup (clef/key/time) pushes the note-start X.
+ */
+export function measureStartWidth(setup?: SetupFn): number {
+  const ctx = makeContext({ width: 500, height: 120 });
+
+  // Baseline (empty) stave.
+  const s0 = new Stave(10, 30, 420).setContext(ctx).draw();
+  const base = s0.getNoteStartX();
+
+  // Stave with modifiers.
+  const s1 = new Stave(10, 30, 420);
+  if (setup) setup(s1);
+  s1.setContext(ctx).draw();
+  const withMods = s1.getNoteStartX();
+
+  return withMods - base;
+}
+
+/** Convenience helpers */
+export function measureClef(clef: string) {
+  return measureStartWidth((s) => s.addClef(clef));
+}
+
+export function measureKeySignature(key: string) {
+  return measureStartWidth((s) => s.addKeySignature(key));
+}
+
+export function measureTimeSignature(ts: string) {
+  return measureStartWidth((s) => s.addTimeSignature(ts));
+}
+
+/** Measure combos (accounts for kerning/spacing between glyphs) */
+export function measureCombo(opts: {
+  clef?: string;
+  key?: string;
+  time?: string;
+}) {
+  return measureStartWidth((s) => {
+    if (opts.clef) s.addClef(opts.clef);
+    if (opts.key) s.addKeySignature(opts.key);
+    if (opts.time) s.addTimeSignature(opts.time);
+  });
 }
