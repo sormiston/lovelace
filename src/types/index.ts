@@ -2,7 +2,7 @@
 export type BaseDuration = "1" | "2" | "4" | "8" | "16" | "32" | "64" | "128";
 export type Step = "C" | "D" | "E" | "F" | "G" | "A" | "B";
 export type Octave = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type ClefNames = "treble" | "bass" | "alto" | "tenor" | "percussion" | "tab";
+export type ClefNames = "treble" | "bass" | "alto" | "tenor" | "percussion"; // add "tab" later
 
 export type Pitch = {
   step: Step;
@@ -23,9 +23,16 @@ export type Sonority = {
   dots?: number;
 };
 
+export type ClefChange = {
+  type: "CLEF_CHANGE";
+  newClef: ClefNames;
+};
+
+export type NoteContextMember = Durational | ClefChange;
 export interface NoteContext {
   type: "TUPLET" | "SIMPLE";
-  members: Durational[];
+  clef: ClefNames;
+  members: NoteContextMember[];
 }
 
 export interface TupletGrouping extends NoteContext {
@@ -33,12 +40,12 @@ export interface TupletGrouping extends NoteContext {
   numNotes: number;
   inTimeOf: number;
   unitDuration: BaseDuration;
-  members: Durational[];
+  
 }
 
 export interface SimpleGrouping extends NoteContext {
   type: "SIMPLE";
-  members: Durational[];
+  
 }
 
 export type NoteGrouping = SimpleGrouping | TupletGrouping;
@@ -58,7 +65,6 @@ export type Measure = {
   timeSignature?: TimeSignature;
   keySignature?: string; // e.g., "C", "Gm"
   tempo?: Tempo;
-  clef?: ClefNames;
   voices: VoiceLine[];
 };
 
@@ -74,7 +80,7 @@ export type Score = {
   keySignature: string; // e.g., "C", "Gm"
   timeSignature: TimeSignature;
   tempo: Tempo;
-  clef: ClefNames;
+  // clef: ClefNames;
   tracks: Track[];
 };
 

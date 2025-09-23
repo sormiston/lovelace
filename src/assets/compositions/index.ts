@@ -8,7 +8,6 @@ const oneVoice: Score = {
   },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -20,6 +19,7 @@ const oneVoice: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   // {
                   //   // single quarter note
@@ -76,7 +76,6 @@ const multiVoice: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -89,6 +88,7 @@ const multiVoice: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -121,6 +121,7 @@ const multiVoice: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -142,7 +143,6 @@ const singleDotted: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -154,6 +154,7 @@ const singleDotted: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -190,7 +191,6 @@ const doubleDotted: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -202,6 +202,7 @@ const doubleDotted: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -253,7 +254,6 @@ const threeFourBarRest: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [3, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -265,6 +265,7 @@ const threeFourBarRest: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "REST",
@@ -285,7 +286,6 @@ const twoTwoBarRest: Score = {
   tempo: { bpm: 60, baseDuration: "2" },
   keySignature: "C",
   timeSignature: [2, 2],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -297,6 +297,7 @@ const twoTwoBarRest: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "REST",
@@ -317,7 +318,6 @@ const sixEightA: Score = {
   tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [6, 8],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -329,6 +329,7 @@ const sixEightA: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -375,7 +376,6 @@ export const triplets1: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -387,6 +387,7 @@ export const triplets1: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -397,6 +398,7 @@ export const triplets1: Score = {
               },
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 3,
                 inTimeOf: 2,
                 unitDuration: "8",
@@ -421,6 +423,7 @@ export const triplets1: Score = {
 
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -431,6 +434,7 @@ export const triplets1: Score = {
               },
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 3,
                 inTimeOf: 2,
                 unitDuration: "8",
@@ -454,6 +458,7 @@ export const triplets1: Score = {
               },
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 3,
                 inTimeOf: 2,
                 unitDuration: "8",
@@ -494,7 +499,6 @@ export const bigTriplets: Score = {
   tempo: { bpm: 85, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -507,6 +511,7 @@ export const bigTriplets: Score = {
             [
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 3,
                 inTimeOf: 2,
                 unitDuration: "2",
@@ -534,6 +539,7 @@ export const bigTriplets: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -571,7 +577,6 @@ const simpleThreeEight: Score = {
   tempo: { bpm: 140, baseDuration: "8" },
   keySignature: "C",
   timeSignature: [3, 8],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -583,6 +588,7 @@ const simpleThreeEight: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -615,7 +621,6 @@ const nineEightA: Score = {
   tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [9, 8],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -627,6 +632,7 @@ const nineEightA: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -666,6 +672,7 @@ const nineEightA: Score = {
               {
                 // 2 eighths in the time of 3 (duplet over one dotted-quarter beat)
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 2,
                 inTimeOf: 3,
                 unitDuration: "8",
@@ -695,7 +702,6 @@ const sixEightB: Score = {
   tempo: { bpm: 104, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [6, 8],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -707,6 +713,7 @@ const sixEightB: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -755,7 +762,6 @@ const twelveEightWRests: Score = {
   tempo: { bpm: 60, baseDuration: "4", compound: true },
   keySignature: "C",
   timeSignature: [12, 8],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -767,6 +773,7 @@ const twelveEightWRests: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "REST",
@@ -803,7 +810,6 @@ const quintSext: Score = {
   tempo: { bpm: 72, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -815,6 +821,7 @@ const quintSext: Score = {
             [
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 5,
                 inTimeOf: 4,
                 unitDuration: "16",
@@ -848,6 +855,7 @@ const quintSext: Score = {
               },
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 5,
                 inTimeOf: 4,
                 unitDuration: "8",
@@ -892,6 +900,7 @@ const quintSext: Score = {
 
               {
                 type: "TUPLET",
+                clef: "treble",
                 numNotes: 6,
                 inTimeOf: 4,
                 unitDuration: "16",
@@ -941,7 +950,6 @@ const eMajorScale: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "E",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -953,6 +961,7 @@ const eMajorScale: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -1005,11 +1014,10 @@ const eMajorScale: Score = {
 };
 
 const cSMelMinScale: Score = {
-  name: "cSharpMinorScale",
+  name: "cSMelMinScale",
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C#m",
   timeSignature: [4, 4],
-  clef: "tenor",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -1021,6 +1029,7 @@ const cSMelMinScale: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "tenor",
                 members: [
                   {
                     type: "SONORITY",
@@ -1095,7 +1104,11 @@ const cSMelMinScale: Score = {
                   {
                     type: "SONORITY",
                     notes: [{ step: "C", accidental: "#", octave: 4 }],
-                    duration: "8",
+                    duration: "16",
+                  },
+                  {
+                    type: "REST",
+                    duration: "16",
                   },
                 ],
               },
@@ -1112,7 +1125,6 @@ const appliedCMaj: Score = {
   tempo: { bpm: 50, baseDuration: "4" },
   keySignature: "Ab",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Right Hand",
@@ -1124,6 +1136,7 @@ const appliedCMaj: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "treble",
                 members: [
                   {
                     type: "SONORITY",
@@ -1178,8 +1191,7 @@ const fSHarMScale: Score = {
   name: "fSHarMScale",
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "F#m",
-  timeSignature: [4, 4],
-  clef: "alto",
+  timeSignature: [5, 4],
   tracks: [
     {
       name: "Piano Right Hand",
@@ -1191,6 +1203,7 @@ const fSHarMScale: Score = {
             [
               {
                 type: "SIMPLE",
+                clef: "alto",
                 members: [
                   {
                     type: "SONORITY",
@@ -1267,6 +1280,10 @@ const fSHarMScale: Score = {
                     notes: [{ step: "F", accidental: "#", octave: 3 }],
                     duration: "8",
                   },
+                  {
+                    type: "REST",
+                    duration: "4",
+                  },
                 ],
               },
             ],
@@ -1282,7 +1299,6 @@ const bassClef: Score = {
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "Bb",
   timeSignature: [4, 4],
-  clef: "treble",
   tracks: [
     {
       name: "Piano Left Hand",
@@ -1290,11 +1306,11 @@ const bassClef: Score = {
       measures: [
         {
           number: 1,
-          clef: "bass",
           voices: [
             [
               {
                 type: "SIMPLE",
+                clef: "bass",
                 members: [
                   {
                     type: "SONORITY",
@@ -1302,8 +1318,7 @@ const bassClef: Score = {
                     duration: "4",
                   },
                   {
-                    type: "SONORITY",
-                    notes: [{ step: "E", accidental: "b", octave: 4 }],
+                    type: "REST",
                     duration: "4",
                   },
                   {
@@ -1315,6 +1330,98 @@ const bassClef: Score = {
                   {
                     type: "SONORITY",
                     notes: [{ step: "E", accidental: "b", octave: 4 }],
+                    duration: "4",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const clefChange: Score = {
+  name: "clefChange",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "Eb",
+  timeSignature: [6, 4],
+  tracks: [
+    {
+      name: "Piano Left Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "bass",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 3 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 3 }],
+                    duration: "4",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "B", accidental: "b", octave: 3 }],
+                    duration: "4",
+                  },
+                ],
+              },
+              {
+                type: "SIMPLE",
+                clef: "tenor",
+                members: [
+                  {
+                    type: "CLEF_CHANGE",
+                    newClef: "tenor",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "D", octave: 4 }],
+                    duration: "4",
+                  },
+                ],
+              },
+              {
+                type: "TUPLET",
+                clef: "tenor",
+                numNotes: 3,
+                inTimeOf: 2,
+                unitDuration: "8",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "E", accidental: "b", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 4 }],
+                    duration: "8",
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "F", accidental: "#", octave: 4 }],
+                    duration: "8",
+                  },
+                ],
+              },
+              {
+                type: "SIMPLE",
+                clef: "bass",
+                members: [
+                  {
+                    type: "REST",
                     duration: "4",
                   },
                 ],
@@ -1339,34 +1446,7 @@ export default {
     appliedCMaj,
     fSHarMScale,
     bassClef,
+    clefChange,
   ],
 };
-// 8th note E5, 16th note E5, chord of (E4 D5), chord of (E5 G5 B5)
-// {
-//   type: "SONORITY",
-//   notes: [{ step: "E", octave: 5 }],
-//   duration: "8",
-//   dots: 1,
-// },
-// {
-//   type: "SONORITY",
-//   notes: [{ step: "E", octave: 5 }],
-//   duration: "16",
-// },
-// {
-//   type: "SONORITY",
-//   notes: [
-//     { step: "E", octave: 4 },
-//     { step: "D", octave: 5 },
-//   ],
-//   duration: "2",
-// },
-// {
-//   type: "SONORITY",
-//   notes: [
-//     { step: "E", octave: 5 },
-//     { step: "G", octave: 5 },
-//     { step: "B", octave: 5 },
-//   ],
-//   duration: "4",
-// },
+

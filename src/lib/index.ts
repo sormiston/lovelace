@@ -7,9 +7,10 @@ import type {
   NoteGrouping,
   Tempo,
   ClefNames,
+  NoteContextMember,
 } from "@/types";
 
-import type { RenderContext } from "vexflow4";
+import { ClefNote, type RenderContext } from "vexflow4";
 import {
   Dot,
   StaveNote,
@@ -25,7 +26,7 @@ import {
 
 type Seconds = number;
 type ToVFVoiceResult = {
-  notes: StaveNote[];
+  notes: (StaveNote | ClefNote)[];
   artifacts: VFElement[];
 };
 function ensureExhaustive(..._args: never[]) {
@@ -129,31 +130,33 @@ function noteGroupingToPlayback(
   let currentTime = offsetTime;
   const playbackData: PartEventRich[] = [];
   const isTuplet = ng.type === "TUPLET";
-  ng.members.forEach((d) => {
-    const tupletContext = isTuplet
-      ? { numNotes: ng.numNotes, inTimeOf: ng.inTimeOf }
-      : undefined;
-    const seconds = noteDurationToSeconds(d, tempo, tupletContext);
-    if (d.type === "SONORITY") {
-      d.notes.forEach((n) => {
-        playbackData.push([
-          currentTime,
-          {
-            duration: seconds,
-            velocity: 0.7,
-            step: n.step,
-            octave: n.octave,
-            accidental: n.accidental,
-          },
-        ]);
-      });
-    } else if (d.type === "REST") {
-      // NO-OP.  time will be banked as normal
-    } else {
-      ensureExhaustive(d);
-    }
-    currentTime += seconds;
-  });
+  ng.members
+    .filter((m) => m.type !== "CLEF_CHANGE")
+    .forEach((d) => {
+      const tupletContext = isTuplet
+        ? { numNotes: ng.numNotes, inTimeOf: ng.inTimeOf }
+        : undefined;
+      const seconds = noteDurationToSeconds(d, tempo, tupletContext);
+      if (d.type === "SONORITY") {
+        d.notes.forEach((n) => {
+          playbackData.push([
+            currentTime,
+            {
+              duration: seconds,
+              velocity: 0.7,
+              step: n.step,
+              octave: n.octave,
+              accidental: n.accidental,
+            },
+          ]);
+        });
+      } else if (d.type === "REST") {
+        // NO-OP.  time will be banked as normal
+      } else {
+        ensureExhaustive(d);
+      }
+      currentTime += seconds;
+    });
 
   return {
     data: playbackData,
@@ -187,17 +190,16 @@ const treatAsBarRest =
     }
     return n;
   };
-type NoteGroupingWithClef = NoteGrouping & { clef: ClefNames };
 
 function processNoteGroup(
-  ng: NoteGroupingWithClef,
+  ng: NoteGrouping,
   postCreateHooks: PostCreateHook[]
 ): ToVFVoiceResult {
   const result: ToVFVoiceResult = { notes: [], artifacts: [] };
   const { clef } = ng;
   if (ng.type === "SIMPLE") {
     const notes = ng.members.map((member) =>
-      mapDurationalToStaveNote(member, clef, postCreateHooks)
+      mapMemberToNote(member, clef, postCreateHooks)
     );
     result.notes = notes;
   } else if (ng.type === "TUPLET") {
@@ -213,8 +215,7 @@ function processNoteGroup(
 /** PRINCIPLE FUNCTION CALL / ENTRY POINT FOR VEXFLOW VOICE CREATION */
 export function mapMeasureToVFVoices(
   measure: Measure,
-  timeSig: TimeSignature,
-  clef: ClefNames
+  timeSig: TimeSignature
 ): [Voice[], VFElement[]] {
   // SETUP
   // STATE IS MUTABLE!  Must be passed to postCreateHooks for configurability we will need later
@@ -227,10 +228,7 @@ export function mapMeasureToVFVoices(
   const voices = measure.voices.map((voice) => {
     const data = voice.reduce(
       (acc: ToVFVoiceResult, entry: NoteGrouping) => {
-        const { notes, artifacts } = processNoteGroup(
-          { ...entry, clef },
-          postCreateHooks
-        );
+        const { notes, artifacts } = processNoteGroup(entry, postCreateHooks);
         acc.notes.push(...notes);
         acc.artifacts.push(...artifacts);
 
@@ -268,10 +266,8 @@ export function mapMeasureToVFVoices(
 function mapTupletToStaveNotes(
   tupletGroup: TupletGrouping,
   clef: ClefNames
-): [StaveNote[], VFElement] {
-  const notes = tupletGroup.members.map((m) =>
-    mapDurationalToStaveNote(m, clef)
-  );
+): [(StaveNote | ClefNote)[], Tuplet] {
+  const notes = tupletGroup.members.map((m) => mapMemberToNote(m, clef));
   const tuplet = new Tuplet(notes, {
     num_notes: tupletGroup.numNotes,
     notes_occupied: tupletGroup.inTimeOf,
@@ -280,18 +276,39 @@ function mapTupletToStaveNotes(
   return [notes, tuplet];
 }
 
-function mapDurationalToStaveNote(
-  d: Durational,
+function determineRestKey(clef: ClefNames) {
+  const table = {
+    treble: ["b/4"],
+    bass: ["d/3"],
+    alto: ["c/4"],
+    tenor: ["b/3"],
+    percussion: ["c/5"],
+  };
+
+  return table[clef] || ["b/4"];
+}
+
+function mapMemberToNote(
+  m: NoteContextMember,
   clef: ClefNames,
   postCreateHooks?: PostCreateHook[]
 ) {
-  const isRest = d.type === "REST";
+  const isRest = m.type === "REST";
+  const isClefNote = m.type === "CLEF_CHANGE";
+
+  if (isClefNote) {
+    const clefNote = new ClefNote(m.newClef, "small");
+    return clefNote;
+  }
+
   const keys = isRest
-    ? ["b/4"]
-    : d.notes.map(
+    ? determineRestKey(clef)
+    : m.notes.map(
         (n) => `${n.step.toLowerCase()}${n.accidental || ""}/${n.octave}`
       );
-  const { duration, dots } = d;
+
+  const { duration, dots } = m;
+
   let staveNote = new StaveNote({
     clef,
     keys,

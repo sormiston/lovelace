@@ -112,13 +112,12 @@ function App() {
     const resolvedTimeSig = score.timeSignature;
     const resolvedTempo = targetMeasure.tempo || score.tempo;
     const resolvedKeySig = targetMeasure.keySignature || score.keySignature;
-    const resolvedClef = targetMeasure.clef || score.clef;
+    const resolvedClef = targetMeasure.voices[0][0].clef;
 
     // Build voices
     const [voices, artifacts] = utils.mapMeasureToVFVoices(
       targetMeasure,
-      resolvedTimeSig,
-      resolvedClef
+      resolvedTimeSig
     );
 
     Accidental.applyAccidentals(voices, resolvedKeySig);
