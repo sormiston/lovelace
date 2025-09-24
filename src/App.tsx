@@ -1,5 +1,12 @@
 import * as Tone from "tone";
-import { Stave, Formatter, Beam, StemmableNote, Accidental } from "vexflow4";
+import {
+  Stave,
+  Formatter,
+  Beam,
+  StemmableNote,
+  Accidental,
+  StaveTie,
+} from "vexflow4";
 import { useEffect, useRef, useState } from "react";
 import compositions from "@/assets/compositions";
 import * as utils from "@/lib";
@@ -115,10 +122,11 @@ function App() {
     const resolvedClef = targetMeasure.voices[0][0].clef;
 
     // Build voices
-    const [voices, artifacts] = utils.mapMeasureToVFVoices(
-      targetMeasure,
-      resolvedTimeSig
-    );
+    const {
+      tickedVoices: voices,
+      tuplets,
+      tieLigations,
+    } = utils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig);
 
     Accidental.applyAccidentals(voices, resolvedKeySig);
 
@@ -159,7 +167,7 @@ function App() {
     const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5;
     formatter.format(voices, actualNoteArea);
 
-    // Draw voices, beams, artifacts
+    // Draw voices, beams, tuplets, ties
     const beamConfig = utils.generateBeamConfig(resolvedTimeSig);
     const beamsByVoice = voices.map((v) => {
       const stemmableNotes = v
@@ -170,7 +178,19 @@ function App() {
 
     voices.forEach((v) => v.draw(context, stave));
     beamsByVoice.flat().forEach((b) => b.setContext(context).draw());
-    artifacts.forEach((a) => a.setContext(context).draw());
+    tuplets.forEach((a) => a.setContext(context).draw());
+    const ties = tieLigations.map(([start, end]) => {
+      return new StaveTie({
+        first_note: start,
+        last_note: end,
+        first_indices: [0],
+        last_indices: [0],
+      });
+    });
+
+    ties.forEach((t) => {
+      t.setContext(context).draw();
+    });
 
     return () => {
       const el = document.getElementById("vf");

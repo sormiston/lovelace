@@ -16,7 +16,6 @@ import {
   StaveNote,
   Tuplet,
   Voice,
-  Element as VFElement,
   VoiceMode,
   Beam,
   StaveTempo,
@@ -25,10 +24,15 @@ import {
 } from "vexflow4";
 
 type Seconds = number;
-type ToVFVoiceResult = {
+type TieLigation =
+  | [StaveNote, StaveNote]
+  | [StaveNote, null]
+  | [null, StaveNote];
+type ProcessNoteGroupResult = {
   notes: (StaveNote | ClefNote)[];
-  artifacts: VFElement[];
+  tuplets: Tuplet[];
 };
+
 function ensureExhaustive(..._args: never[]) {
   throw new Error();
 }
@@ -168,34 +172,8 @@ function noteGroupingToPlayback(
  * VEXFLOW INTEGRATION
  */
 
-type PostCreateHook = (d: StaveNote) => StaveNote;
-const treatAsBarRest =
-  (timeSig: TimeSignature, state: { voiceMode: VoiceMode }): PostCreateHook =>
-  (n: StaveNote) => {
-    if (!n.isRest()) return n;
-
-    const [num, den] = timeSig;
-    const voice = new Voice({ num_beats: num, beat_value: den }).setMode(
-      Voice.Mode.SOFT
-    );
-    const barTicks = voice.getTotalTicks();
-    const noteTicks = n.getTicks();
-    // If the note's ticks equal OR GREATER THAN the total ticks in the bar, it's a bar rest
-    const isBarRest = noteTicks.greaterThanEquals(barTicks);
-
-    if (isBarRest) {
-      n.setCenterAlignment(true);
-      n.setIgnoreTicks(true);
-      state.voiceMode = Voice.Mode.SOFT;
-    }
-    return n;
-  };
-
-function processNoteGroup(
-  ng: NoteGrouping,
-  postCreateHooks: PostCreateHook[]
-): ToVFVoiceResult {
-  const result: ToVFVoiceResult = { notes: [], artifacts: [] };
+function processNoteGroup(ng: NoteGrouping, postCreateHooks: PostCreateHook[]) {
+  const result: ProcessNoteGroupResult = { notes: [], tuplets: [] };
   const { clef } = ng;
   if (ng.type === "SIMPLE") {
     const notes = ng.members.map((member) =>
@@ -205,42 +183,104 @@ function processNoteGroup(
   } else if (ng.type === "TUPLET") {
     const [notes, tuplet] = mapTupletToStaveNotes(ng, clef);
     result.notes = notes;
-    result.artifacts = [tuplet];
+    result.tuplets = [tuplet];
   } else {
     ensureExhaustive(ng);
   }
 
   return result;
 }
+
+type RichNewStaveNote = { staveNote: StaveNote } & Readonly<Durational>;
+type PostCreateHook = (newNoteData: RichNewStaveNote) => RichNewStaveNote;
+
+function treatAsBarRest(
+  timeSig: TimeSignature,
+  state: { voiceMode: VoiceMode }
+): PostCreateHook {
+  return function treatAsBarRestCb(data) {
+    const { staveNote } = data;
+    if (!staveNote.isRest()) return data;
+
+    const [num, den] = timeSig;
+    const voice = new Voice({ num_beats: num, beat_value: den }).setMode(
+      Voice.Mode.SOFT
+    );
+    const barTicks = voice.getTotalTicks();
+    const noteTicks = staveNote.getTicks();
+    // If the note's ticks equal OR GREATER THAN the total ticks in the bar, it's a bar rest
+    const isBarRest = noteTicks.greaterThanEquals(barTicks);
+
+    if (isBarRest) {
+      staveNote.setCenterAlignment(true);
+      staveNote.setIgnoreTicks(true);
+      state.voiceMode = Voice.Mode.SOFT;
+    }
+    return { ...data, staveNote };
+  };
+}
+
+function reportTieLigations(state: {
+  tieLigations: TieLigation[];
+}): PostCreateHook {
+  return function reportTieLigationsCb(newNoteData) {
+    if (newNoteData.type === "REST") return newNoteData;
+
+    const { staveNote, tieStart, tieEnd } = newNoteData;
+    if (tieStart) {
+      state.tieLigations.push([staveNote, null]);
+    } else if (tieEnd) {
+      const lastTie = state.tieLigations[state.tieLigations.length - 1];
+      if (lastTie && lastTie[1] === null) {
+        state.tieLigations[state.tieLigations.length - 1] = [
+          lastTie[0],
+          staveNote,
+        ];
+      } else {
+        state.tieLigations.push([null, staveNote]);
+      }
+    }
+
+    return newNoteData;
+  };
+}
+
 /** PRINCIPLE FUNCTION CALL / ENTRY POINT FOR VEXFLOW VOICE CREATION */
-export function mapMeasureToVFVoices(
-  measure: Measure,
-  timeSig: TimeSignature
-): [Voice[], VFElement[]] {
+export function mapMeasureToVFVoices(measure: Measure, timeSig: TimeSignature) {
   // SETUP
   // STATE IS MUTABLE!  Must be passed to postCreateHooks for configurability we will need later
   const state = {
     voiceMode: Voice.Mode.STRICT,
+    tieLigations: [] as TieLigation[],
   };
-  const postCreateHooks = [treatAsBarRest(timeSig, state)];
+  const postCreateHooks = [
+    treatAsBarRest(timeSig, state),
+    reportTieLigations(state),
+  ];
 
   // RUN
   const voices = measure.voices.map((voice) => {
     const data = voice.reduce(
-      (acc: ToVFVoiceResult, entry: NoteGrouping) => {
-        const { notes, artifacts } = processNoteGroup(entry, postCreateHooks);
+      (
+        acc: ProcessNoteGroupResult & { tieLigations: TieLigation[] },
+        entry: NoteGrouping
+      ) => {
+        const { notes, tuplets } = processNoteGroup(entry, postCreateHooks);
         acc.notes.push(...notes);
-        acc.artifacts.push(...artifacts);
+        acc.tuplets.push(...tuplets);
+        acc.tieLigations.push(...state.tieLigations);
 
         return acc;
       },
-      { notes: [], artifacts: [] }
+      { notes: [], tuplets: [], tieLigations: [] } as ProcessNoteGroupResult & {
+        tieLigations: TieLigation[];
+      }
     );
 
     return data;
   });
 
-  const { tickedVoices, artifacts } = voices.reduce(
+  const { tickedVoices, tuplets, tieLigations } = voices.reduce(
     (acc, data) => {
       const voice = new Voice({
         num_beats: timeSig[0],
@@ -250,17 +290,19 @@ export function mapMeasureToVFVoices(
         .addTickables(data.notes);
 
       acc.tickedVoices.push(voice);
-      acc.artifacts.push(...data.artifacts);
+      acc.tuplets.push(...data.tuplets);
+      acc.tieLigations.push(...data.tieLigations);
 
       return acc;
     },
-    { tickedVoices: [], artifacts: [] } as {
-      tickedVoices: Voice[];
-      artifacts: VFElement[];
+    {
+      tickedVoices: [] as Voice[],
+      tuplets: [] as Tuplet[],
+      tieLigations: [] as TieLigation[],
     }
   );
 
-  return [tickedVoices, artifacts];
+  return { tickedVoices, tuplets, tieLigations };
 }
 
 function mapTupletToStaveNotes(
@@ -309,7 +351,7 @@ function mapMemberToNote(
 
   const { duration, dots } = m;
 
-  let staveNote = new StaveNote({
+  const staveNote = new StaveNote({
     clef,
     keys,
     duration,
@@ -324,11 +366,14 @@ function mapMemberToNote(
     }
   }
 
-  staveNote = postCreateHooks
-    ? postCreateHooks.reduce((acc, curr) => {
-        return curr(acc);
-      }, staveNote)
-    : staveNote;
+  if (postCreateHooks && postCreateHooks.length) {
+    const initial: RichNewStaveNote = { ...m, staveNote };
+    const processed = postCreateHooks.reduce<RichNewStaveNote>((acc, curr) => {
+      return curr(acc);
+    }, initial);
+
+    return processed.staveNote;
+  }
 
   return staveNote;
 }

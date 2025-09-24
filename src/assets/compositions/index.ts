@@ -1434,6 +1434,75 @@ const clefChange: Score = {
   ],
 };
 
+const monophonicTies: Score = {
+  name: "monophonicTies",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "bass",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 3 }],
+                    duration: "8",
+                    dots: 1,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 3 }],
+                    duration: "16",
+                    tieStart: true,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 3 }],
+                    duration: "8",
+                    tieEnd: true,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 3 }],
+                    duration: "8",
+                    tieStart: true,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 3 }],
+                    duration: "16",
+                    tieEnd: true
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "G", octave: 3 }],
+                    duration: "8",
+                    dots: 1,
+                  },
+                  {
+                    type: "SONORITY",
+                    notes: [{ step: "C", octave: 3 }],
+                    duration: "4",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 export default {
   simple: [oneVoice, multiVoice, simpleThreeEight],
   dotted: [singleDotted, doubleDotted],
@@ -1448,5 +1517,5 @@ export default {
     bassClef,
     clefChange,
   ],
+  ties: [monophonicTies],
 };
-

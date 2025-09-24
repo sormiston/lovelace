@@ -21,6 +21,8 @@ export type Sonority = {
   notes: Pitch[]; // Single pitch for a note, multiple for a chord
   duration: BaseDuration;
   dots?: number;
+  tieStart?: boolean;
+  tieEnd?: boolean;
 };
 
 export type ClefChange = {
@@ -40,12 +42,10 @@ export interface TupletGrouping extends NoteContext {
   numNotes: number;
   inTimeOf: number;
   unitDuration: BaseDuration;
-  
 }
 
 export interface SimpleGrouping extends NoteContext {
   type: "SIMPLE";
-  
 }
 
 export type NoteGrouping = SimpleGrouping | TupletGrouping;
