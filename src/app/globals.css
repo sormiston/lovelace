@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@layer components {
+  .control-button {
+    @apply border p-1 cursor-pointer;
+  }
+  .control-button--active {
+    @apply bg-neutral-300;
+  }
+}
