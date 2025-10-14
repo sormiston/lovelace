@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { defineConfig } from "cypress";
+import { addMatchImageSnapshotPlugin } from "@simonsmith/cypress-image-snapshot/plugin";
 
 export default defineConfig({
   e2e: {
@@ -12,6 +14,9 @@ export default defineConfig({
     devServer: {
       framework: "next",
       bundler: "webpack",
+    },
+    setupNodeEvents(on) {
+      addMatchImageSnapshotPlugin(on);
     },
   },
 });

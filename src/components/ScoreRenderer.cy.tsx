@@ -5,7 +5,7 @@ import compositions from "@/data/compositions";
 
 const Wrapper = ({ score }: { score: Score }) => {
   const ref = useRef<ScoreRendererHandle>(null);
-  const [handle, setHandle] = useState<ScoreRendererHandle | null>(null);
+  const [_handle, setHandle] = useState<ScoreRendererHandle | null>(null);
 
   useEffect(() => setHandle(ref.current), []);
 
@@ -21,5 +21,16 @@ describe("<ScoreRenderer />", () => {
     cy.viewport(1000, 600);
     // see: https://on.cypress.io/mounting-react
     cy.mount(<Wrapper score={compositions.simple[0]} />);
+  });
+
+  const categories = Object.keys(compositions) as (keyof typeof compositions)[];
+  categories.forEach((category) => {
+    compositions[category].forEach((score) => {
+      it(`${category}:${score.name} matches snapshot`, () => {
+        cy.viewport(1000, 600);
+        cy.mount(<Wrapper score={score} />);
+        cy.get("#vf").matchImageSnapshot();
+      });
+    });
   });
 });
