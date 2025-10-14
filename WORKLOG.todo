@@ -1,0 +1,108 @@
+Phase 1: Development of a data structure which serves as "source of truth" to both Vexflow renderer and to tone.js playback:
+  Vexflow Tutorial:
+    PHASE 1A: RHYTHMIC CONCERNS
+      ✔ [TheBasics](https://github.com/0xfe/vexflow/wiki/Tutorial#step-1-the-basics--run-) @done (04/09/2025, 11:01:49)
+      ✔ [Add Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-2-add-notes--run-) @done (04/09/2025, 16:07:45)
+      ✔ Dotted rhythms [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-): @done (05/09/2025, 18:33:33)
+        ✔ single dotted @done (05/09/2025, 11:42:06)
+        ✔ double dotted @done (05/09/2025, 18:33:36)
+      ✔ Time Signatures - bar rests @done (12/09/2025, 18:40:03)
+        ✔ 3/4 @done (09/09/2025, 10:23:37)
+        ✔ 2/2 @done (12/09/2025, 18:00:41)
+        ✔ 6/8 @done (09/09/2025, 10:23:41)
+        ✘ 7/8 @cancelled (12/09/2025, 18:39:45)
+        ✘ 5/16 @cancelled (12/09/2025, 18:39:52)
+        ✘ 3/8 @cancelled (12/09/2025, 18:39:55)
+        ✘ 9/8 @cancelled (12/09/2025, 18:39:58)
+        ✔ 3/8 @done (17/09/2025, 14:41:27)
+
+      ✔ Compound meters @done (17/09/2025, 14:41:38)
+        ✔ 6/8 @done (16/09/2025, 22:25:33)
+        ✔ 9/8 @done (17/09/2025, 14:41:35)
+        ✔ 12/8 @done (17/09/2025, 15:01:28)
+        ✔ with rests @done (17/09/2025, 15:01:50)
+      
+      ✘ Mixed meters @cancelled (19/09/2025, 12:05:44)
+        ☐ 5/16
+        ☐ 5/16 changeable stress pattern
+        ☐ 7/8
+        ☐ 7/8 changeable stress pattern
+        ☐ 10/4
+        ☐ 10/4 changeable stress pattern
+      
+        
+      ✔ Tuplets @done (19/09/2025, 12:06:03)
+        ✔ Triplets with rests @done (11/09/2025, 14:26:20)
+        ✔ quintuplets & sextuplets @done (19/09/2025, 12:05:59)
+     
+     ✔ [Ties](https://github.com/0xfe/vexflow/wiki/Tutorial#step-5-ties--run-) @done (02/10/2025, 13:54:59)
+       ✔ simple and monophonic @done (26/09/2025, 14:44:55)
+
+    PHASE 1B: TONAL CONCERNS
+    ✘ Accidentals (from [Modifiers](https://github.com/0xfe/vexflow/wiki/Tutorial#step-3-modifiers--run-):) @cancelled (22/09/2025, 13:25:59)
+    ✔ Key Signatures + "in-key" accidentals @done (22/09/2025, 14:51:37)
+      ✔ layout measurement to account for larger or smaller key signatures (LEFT GLYPH pixel space) @done (22/09/2025, 14:51:43)
+    ✔ Clefs @done (22/09/2025, 18:02:36)
+
+    PHASE 1C: ENGRAVING AND EXPRESSION CONCERNS
+    ✔ [Beam Your Notes](https://github.com/0xfe/vexflow/wiki/Tutorial#step-4-beam-your-notes--run-) @done (11/09/2025, 14:25:27)
+    ✘ Beam group patterns in compound meters @cancelled (22/09/2025, 19:43:01)
+      ✔ 6/8 @done (17/09/2025, 14:41:48)
+      ☐ 5/16
+      ☐ 7/8
+   
+    ✘ [Guitar Tablature](https://github.com/0xfe/vexflow/wiki/Tutorial#step-6-guitar-tablature--run-) @cancelled (05/09/2025, 12:03:55) -- MOVE TO ANOTHER DEV PHASE
+    ✔ mid-measure clef changes @done (23/09/2025, 23:04:57)
+    ✘ mid-measure key changes @cancelled (22/09/2025, 19:41:05)
+    
+
+    
+    ☐ TESTING MILESTONE
+      ✔ playback data @done (02/10/2025, 18:09:53)
+      ☐ visual regression
+    
+    PHASE 2: MULTI-MEASURE SUPPORT
+    ☐ Basic 3:
+      ☐ with barlines (https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-)
+      ☐ with ending barline
+      ☐ with repeats
+      ☐ With ties over barlines
+      ☐ change of time signature
+      ☐ change of key signature
+
+    ☐ Multiple systems
+      ☐ responsive resizing
+      ☐ time signature at first bar of each system
+      ☐ key signature at first bar of each system
+      ☐ tempo changes mid-system
+    
+
+PHASE 3: User Create Flows
+  Basics:
+    ☐ User can initialize a document with a number of empty measures, designating time signature and key signature
+  Note Addition:
+    ☐ USER can add a mix of quarter-notes, quarter-note rests, and quarter-note chords to > 1 measures
+    ☐ USER can Undo and Redo
+    ☐ USER can select a range of measures for playback
+    ☐ USER cannot add notes or rests to a measure that is full
+
+
+Running Task List
+SHOULD-DO ENHANCEMENTS:
+  ✔ optional metronome click track with playback @done (05/09/2025, 18:10:28)
+  ✔ active and inactive states for control buttons (play, selected score) @done (05/09/2025, 18:10:31)
+  ☐ Change synth for sampler and implement instrument selection
+
+BUGS: 
+  ✔ Whole bar rests should be centered @done (11/09/2025, 19:20:41)
+  ✔ Stem Directions are not being auto-determined unless beamed @done (11/09/2025, 14:52:28)
+  ☐ 3 - Stem Directions are not being auto-determined by voice
+  ✔ 1 - no metronome clicks on bar rest examples @done (17/09/2025, 14:42:00)
+  ☐ 5 - advanced tuplets (see quintSext) all whacky engraving (beaming and brackets and text display of ratio)
+  
+TECH DEBT:
+  ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)
+  ☐ 2 - having clef changes as Note Context Members feels redundant --- clef change notes should be determined based on clef property of NoteContext types
+  ☐ 3 - lazy load score to simulate db / async io and stress test no-data state of main rendering component (at time of writing, <App />)
+  ☐ 5 - namespacing / splitting of utils (libs) in VF / Tone.js integrations
+  ☐ 4 - typing of tuple and object type events (2nd arg) and callback (1st arg) in Tone.Part can be improved by pulling types from Tone.js

@@ -15,7 +15,6 @@ describe("noteDurationToSeconds", () => {
   });
 });
 
-// Replace getPlaybackEvents helper with resolveScore that does not call measuresToPlayback
 function resolveScore(category: keyof typeof compositions, name: string) {
   const score = compositions[category]?.find((s: Score) => s.name === name);
   if (!score)

@@ -10,7 +10,7 @@ import ScoreRenderer, {
 
 export type Category = keyof typeof compositions;
 
-function App() {
+export default function Demo() {
   const [category, setCategory] = useState<Category>("simple");
   const [score, setScore] = useState<Score>(compositions["simple"][0]);
   const [metronomeActive, setMetronomeActive] = useState(false);
@@ -87,5 +87,3 @@ function App() {
     </main>
   );
 }
-
-export default App;
