@@ -3,9 +3,9 @@ import type { Score } from "@/types";
 import ScoreRenderer, { type ScoreRendererHandle } from "./ScoreRenderer";
 import compositions from "@/data/compositions";
 
-const Wrapper = ({ score }: { score: Score }) => {
+export const Wrapper = ({ score }: { score: Score }) => {
   const ref = useRef<ScoreRendererHandle>(null);
-  const [handle, setHandle] = useState<ScoreRendererHandle | null>(null);
+  const [_handle, setHandle] = useState<ScoreRendererHandle | null>(null);
 
   useEffect(() => setHandle(ref.current), []);
 

@@ -7,8 +7,11 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest",
-    "cy:open": "cypress open"
+    "test": "vitest run",
+    "cy:open": "cypress open",
+    "cy:run:component": "cypress run --component",
+    "cy:run:component:snap-update": "cypress run --component --env updateSnapshots=true",
+    "cy:run:component:vrt": "cypress run --component --spec \"src/**/*VRT*.cy.{ts,tsx}\""
   },
   "dependencies": {
     "next": "15.5.4",
@@ -19,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@simonsmith/cypress-image-snapshot": "^10.0.2",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.0",
