@@ -15,7 +15,7 @@ export interface ScoreRendererHandle {
   play: () => Promise<void>;
 }
 
-type ScoreRendererProps = {
+export type ScoreRendererProps = {
   score: Score;
   metronomeActive: boolean;
   ref: React.Ref<ScoreRendererHandle>;
