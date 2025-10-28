@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import * as lib from "@/lib";
+import * as toneJsUtils from "./toneJsUtils";
 import compositions from "@/data/compositions";
 import type { Score } from "@/types";
 import { expectedPlaybackEvents } from "./__fixtures__/playbackEvents";
 
 describe("noteDurationToSeconds", () => {
   it("returns 1 second for a quarter note at 60 bpm", () => {
-    const seconds = lib.noteDurationToSeconds(
+    const seconds = toneJsUtils.noteDurationToSeconds(
       { numerator: 1, denominator: 4 },
       { bpm: 60, baseDuration: "4" }
     );
@@ -30,7 +30,10 @@ describe("measuresToPlayback", () => {
     if (!score) throw new Error("Score not found");
     const targetMeasures = score.tracks[0].measures;
     const tempoResolved = targetMeasures[0].tempo || score.tempo;
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(
+      targetMeasures,
+      tempoResolved
+    );
     const expected = expectedPlaybackEvents.simple.oneVoice;
 
     expect(events).toMatchObject(expected);
@@ -41,7 +44,7 @@ describe("measuresToPlayback", () => {
       "simple",
       "multiVoice"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.simple.multiVoice;
     expect(events).toMatchObject(expected);
   });
@@ -51,7 +54,7 @@ describe("measuresToPlayback", () => {
       "simple",
       "simpleThreeEight"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.simple.simpleThreeEight;
     expect(events).toMatchObject(expected);
   });
@@ -61,7 +64,7 @@ describe("measuresToPlayback", () => {
       "dotted",
       "singleDotted"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.dotted.singleDotted;
     expect(events).toMatchObject(expected);
   });
@@ -71,7 +74,7 @@ describe("measuresToPlayback", () => {
       "dotted",
       "doubleDotted"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.dotted.doubleDotted;
     expect(events).toMatchObject(expected);
   });
@@ -81,7 +84,7 @@ describe("measuresToPlayback", () => {
       "tuplets",
       "triplets1"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tuplets.triplets1;
     expect(events).toMatchObject(expected);
   });
@@ -91,7 +94,7 @@ describe("measuresToPlayback", () => {
       "tuplets",
       "bigTriplets"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tuplets.bigTriplets;
     expect(events).toMatchObject(expected);
   });
@@ -101,7 +104,7 @@ describe("measuresToPlayback", () => {
       "tuplets",
       "quintSext"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tuplets.quintSext;
     expect(events).toMatchObject(expected);
   });
@@ -111,7 +114,7 @@ describe("measuresToPlayback", () => {
       "compoundMeter",
       "sixEightA"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.compoundMeter.sixEightA;
     expect(events).toMatchObject(expected);
   });
@@ -121,7 +124,7 @@ describe("measuresToPlayback", () => {
       "compoundMeter",
       "nineEightA"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.compoundMeter.nineEightA;
     expect(events).toMatchObject(expected);
   });
@@ -131,7 +134,7 @@ describe("measuresToPlayback", () => {
       "compoundMeter",
       "sixEightB"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.compoundMeter.sixEightB;
     expect(events).toMatchObject(expected);
   });
@@ -141,7 +144,7 @@ describe("measuresToPlayback", () => {
       "compoundMeter",
       "twelveEightWRests"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.compoundMeter.twelveEightWRests;
     expect(events).toMatchObject(expected);
   });
@@ -151,7 +154,7 @@ describe("measuresToPlayback", () => {
       "tonality",
       "eMajorScale"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tonality.eMajorScale;
     expect(events).toMatchObject(expected);
   });
@@ -161,7 +164,7 @@ describe("measuresToPlayback", () => {
       "tonality",
       "cSMelMinScale"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tonality.cSMelMinScale;
     expect(events).toMatchObject(expected);
   });
@@ -171,7 +174,7 @@ describe("measuresToPlayback", () => {
       "tonality",
       "appliedCMaj"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tonality.appliedCMaj;
     expect(events).toMatchObject(expected);
   });
@@ -181,7 +184,7 @@ describe("measuresToPlayback", () => {
       "tonality",
       "fSHarMScale"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tonality.fSHarMScale;
     expect(events).toMatchObject(expected);
   });
@@ -191,7 +194,7 @@ describe("measuresToPlayback", () => {
       "tonality",
       "bassClef"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tonality.bassClef;
     expect(events).toMatchObject(expected);
   });
@@ -201,7 +204,7 @@ describe("measuresToPlayback", () => {
       "tonality",
       "clefChange"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.tonality.clefChange;
     expect(events).toMatchObject(expected);
   });
@@ -211,7 +214,7 @@ describe("measuresToPlayback", () => {
       "ties",
       "monophonicWTuplet"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.ties.monophonicWTuplet;
     expect(events).toMatchObject(expected);
   });
@@ -221,7 +224,7 @@ describe("measuresToPlayback", () => {
       "ties",
       "homophonicTies"
     );
-    const events = lib.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
     const expected = expectedPlaybackEvents.ties.homophonicTies;
     expect(events).toMatchObject(expected);
   });

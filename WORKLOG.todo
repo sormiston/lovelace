@@ -57,9 +57,9 @@ Phase 1: Development of a data structure which serves as "source of truth" to bo
     
 
     
-    ☐ TESTING MILESTONE
+    ✔ TESTING MILESTONE @done (28/10/2025, 18:45:12)
       ✔ playback data @done (02/10/2025, 18:09:53)
-      ☐ visual regression
+      ✔ visual regression @done (28/10/2025, 18:45:09)
     
     PHASE 2: MULTI-MEASURE SUPPORT
     ☐ Basic 3:
@@ -102,7 +102,8 @@ BUGS:
   
 TECH DEBT:
   ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)
+  ☐ 2 - do not repeat fractional math functions in my code; use the Fraction class available from vexflow4 where possible
   ☐ 2 - having clef changes as Note Context Members feels redundant --- clef change notes should be determined based on clef property of NoteContext types
   ☐ 3 - lazy load score to simulate db / async io and stress test no-data state of main rendering component (at time of writing, <App />)
-  ☐ 5 - namespacing / splitting of utils (libs) in VF / Tone.js integrations
+  ✔ 5 - namespacing / splitting of utils (libs) in VF / Tone.js integrations @done (28/10/2025, 18:44:51)
   ☐ 4 - typing of tuple and object type events (2nd arg) and callback (1st arg) in Tone.Part can be improved by pulling types from Tone.js

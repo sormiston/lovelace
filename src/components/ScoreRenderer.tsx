@@ -8,7 +8,7 @@ import {
   StaveTie,
   StemmableNote,
 } from "vexflow4";
-import * as utils from "@/lib";
+import { toneJsUtils, vexflowUtils } from "@/lib";
 import type { PartEventRich, Score } from "@/types";
 
 export interface ScoreRendererHandle {
@@ -79,10 +79,10 @@ export default function ScoreRenderer({
    */
   // RENDER VEXFLOW
   useEffect(() => {
-    const div = document.getElementById("vf") as HTMLDivElement | null;
+    const div = document.getElementById("vf") as HTMLDivElement;
     if (!div) return;
     const RENDERER_WIDTH = 650;
-    const context = utils.makeContext(
+    const context = vexflowUtils.makeContext(
       { width: RENDERER_WIDTH, height: 220 },
       div
     );
@@ -97,7 +97,7 @@ export default function ScoreRenderer({
       tickedVoices: voices,
       tuplets,
       tieLigations,
-    } = utils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig);
+    } = vexflowUtils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig);
 
     Accidental.applyAccidentals(voices, resolvedKeySig);
 
@@ -106,7 +106,7 @@ export default function ScoreRenderer({
       .joinVoices(voices)
       .preCalculateMinTotalWidth(voices);
 
-    const leftGlyphWidth = utils.measureCombo({
+    const leftGlyphWidth = vexflowUtils.measureCombo({
       clef: resolvedClef,
       key: resolvedKeySig,
       time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,
@@ -126,14 +126,14 @@ export default function ScoreRenderer({
       .setContext(context)
       .setX(xCenter);
 
-    stave = utils.attachStaveTempo(stave, resolvedTempo);
+    stave = vexflowUtils.attachStaveTempo(stave, resolvedTempo);
 
     stave.draw();
 
     const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5;
     formatter.format(voices, actualNoteArea);
 
-    const beamConfig = utils.generateBeamConfig(resolvedTimeSig);
+    const beamConfig = vexflowUtils.generateBeamConfig(resolvedTimeSig);
     const beamsByVoice = voices.map((v) => {
       const stemmableNotes = v
         .getTickables()
@@ -177,7 +177,7 @@ export default function ScoreRenderer({
     const targetMeasure = score.tracks[0].measures[0];
     const resolvedTimeSig = targetMeasure.timeSignature || score.timeSignature;
 
-    const events = utils.generateClickTrack(score.tempo, resolvedTimeSig);
+    const events = toneJsUtils.generateClickTrack(score.tempo, resolvedTimeSig);
     setMetronomeEvents(events);
 
     return () => {
@@ -191,7 +191,7 @@ export default function ScoreRenderer({
   const buildPlaybackPart = () => {
     const targetMeasures = score.tracks[0].measures;
     const tempoResolved = targetMeasures[0].tempo || score.tempo;
-    const events = utils.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
 
     if (partRef.current) partRef.current.dispose();
 
