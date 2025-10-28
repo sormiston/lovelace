@@ -91,7 +91,7 @@ export type Score = {
 
 // TONE.JS PLAYBACK TYPES
 export type PartEventRich = [
-  number,
+  number, // time in seconds for start of note
   {
     duration: number;
     velocity: number;

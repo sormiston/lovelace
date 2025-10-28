@@ -7,14 +7,9 @@ import type {
   PlaybackSonority,
   Tempo,
   TimeSignature,
+  Fraction
 } from "@/types";
 import { ensureExhaustive } from "@/lib/_utils";
-
-// TODO: deprecate  in favor of Fraction class from vexflow4
-export type Fraction = {
-  numerator: number;
-  denominator: number;
-};
 
 export function generateClickTrack(
   tempo: Tempo,
@@ -274,6 +269,10 @@ function transformVoiceForPlayback(
   return transformed;
 }
 
+/**
+ * ENTRY POINT FUNCTION
+ * Transforms an array of Measures into TONE.JS compatible playback data
+ */
 export function measuresToPlayback(
   measures: Measure[],
   tempo: Tempo

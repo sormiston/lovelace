@@ -106,7 +106,7 @@ export default function ScoreRenderer({
       .joinVoices(voices)
       .preCalculateMinTotalWidth(voices);
 
-    const leftGlyphWidth = vexflowUtils.measureCombo({
+    const leftGlyphWidth = vexflowUtils.measureLeftGlyphs({
       clef: resolvedClef,
       key: resolvedKeySig,
       time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,

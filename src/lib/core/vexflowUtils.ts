@@ -330,7 +330,6 @@ export function attachStaveTempo(stave: Stave, tempo: Tempo) {
   return stave;
 }
 
-type SetupFn = (s: Stave) => void;
 type ContextSetup = { width: number; height: number };
 
 /**
@@ -348,10 +347,11 @@ export function makeContext(
   return renderer.getContext();
 }
 
-/**
- * Measures how many pixels the given setup (clef/key/time) pushes the note-start X.
- */
-export function measureStartWidth(setup?: SetupFn): number {
+export function measureLeftGlyphs(opts: {
+  clef?: string;
+  key?: string;
+  time?: string;
+}) {
   const ctx = makeContext({ width: 500, height: 120 });
 
   // Baseline (empty) stave.
@@ -360,35 +360,11 @@ export function measureStartWidth(setup?: SetupFn): number {
 
   // Stave with modifiers.
   const s1 = new Stave(10, 30, 420);
-  if (setup) setup(s1);
+  if (opts.clef) s1.addClef(opts.clef);
+  if (opts.key) s1.addKeySignature(opts.key);
+  if (opts.time) s1.addTimeSignature(opts.time);
   s1.setContext(ctx).draw();
   const withMods = s1.getNoteStartX();
 
   return withMods - base;
-}
-
-/** Convenience helpers */
-export function measureClef(clef: string) {
-  return measureStartWidth((s) => s.addClef(clef));
-}
-
-export function measureKeySignature(key: string) {
-  return measureStartWidth((s) => s.addKeySignature(key));
-}
-
-export function measureTimeSignature(ts: string) {
-  return measureStartWidth((s) => s.addTimeSignature(ts));
-}
-
-/** Measure combos (accounts for kerning/spacing between glyphs) */
-export function measureCombo(opts: {
-  clef?: string;
-  key?: string;
-  time?: string;
-}) {
-  return measureStartWidth((s) => {
-    if (opts.clef) s.addClef(opts.clef);
-    if (opts.key) s.addKeySignature(opts.key);
-    if (opts.time) s.addTimeSignature(opts.time);
-  });
 }
