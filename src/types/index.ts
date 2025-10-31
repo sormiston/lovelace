@@ -28,30 +28,20 @@ export type Sonority = {
   tieEnd?: boolean;
 };
 
-export type ClefChange = {
-  type: "CLEF_CHANGE";
-  newClef: ClefNames;
+export type SimpleGrouping = {
+  type: "SIMPLE";
+  clef: ClefNames;
+  members: Durational[];
 };
 
-export type NoteContextMember = Durational | ClefChange;
-
-// HEH.  Below is an experiment in "how do i feel about OOP style inheritance"
-export interface NoteContext {
-  type: "TUPLET" | "SIMPLE";
-  clef: ClefNames;
-  members: NoteContextMember[];
-}
-
-export interface TupletGrouping extends NoteContext {
+export type TupletGrouping = {
   type: "TUPLET";
+  clef: ClefNames;
+  members: Durational[];
   numNotes: number;
   inTimeOf: number;
   unitDuration: BaseDuration;
-}
-
-export interface SimpleGrouping extends NoteContext {
-  type: "SIMPLE";
-}
+};
 
 export type NoteGrouping = SimpleGrouping | TupletGrouping;
 

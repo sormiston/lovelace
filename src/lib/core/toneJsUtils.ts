@@ -168,8 +168,6 @@ function transformGroupingForPlayback(
       : { numerator: 1, denominator: 1 };
 
   for (const member of grouping.members) {
-    if (member.type === "CLEF_CHANGE") continue;
-
     if (member.type === "REST") {
       if (tieChain) {
         throw new Error("Illegal: ties over rests not supported");

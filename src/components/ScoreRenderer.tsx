@@ -97,7 +97,7 @@ export default function ScoreRenderer({
       tickedVoices: voices,
       tuplets,
       tieLigations,
-    } = vexflowUtils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig);
+    } = vexflowUtils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig, resolvedClef);
 
     Accidental.applyAccidentals(voices, resolvedKeySig);
 

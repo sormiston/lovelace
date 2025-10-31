@@ -1388,10 +1388,6 @@ const clefChange: Score = {
                 clef: "tenor",
                 members: [
                   {
-                    type: "CLEF_CHANGE",
-                    newClef: "tenor",
-                  },
-                  {
                     type: "SONORITY",
                     notes: [{ step: "D", octave: 4 }],
                     duration: "4",
@@ -1424,7 +1420,7 @@ const clefChange: Score = {
               },
               {
                 type: "SIMPLE",
-                clef: "bass",
+                clef: "tenor",
                 members: [
                   {
                     type: "REST",
@@ -1668,7 +1664,7 @@ const monophonicWTuplet: Score = {
   ],
 };
 
-export default {
+const scores = {
   simple: [oneVoice, multiVoice, simpleThreeEight],
   dotted: [singleDotted, doubleDotted],
   tuplets: [triplets1, bigTriplets, quintSext],
@@ -1684,3 +1680,5 @@ export default {
   ],
   ties: [monophonicTies, monophonicWTuplet, homophonicTies],
 };
+
+export default scores;
