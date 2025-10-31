@@ -97,7 +97,11 @@ export default function ScoreRenderer({
       tickedVoices: voices,
       tuplets,
       tieLigations,
-    } = vexflowUtils.mapMeasureToVFVoices(targetMeasure, resolvedTimeSig, resolvedClef);
+    } = vexflowUtils.parseScoreToVFDrawables(
+      targetMeasure,
+      resolvedTimeSig,
+      resolvedClef
+    );
 
     Accidental.applyAccidentals(voices, resolvedKeySig);
 
@@ -191,7 +195,10 @@ export default function ScoreRenderer({
   const buildPlaybackPart = () => {
     const targetMeasures = score.tracks[0].measures;
     const tempoResolved = targetMeasures[0].tempo || score.tempo;
-    const events = toneJsUtils.measuresToPlayback(targetMeasures, tempoResolved);
+    const events = toneJsUtils.measuresToPlayback(
+      targetMeasures,
+      tempoResolved
+    );
 
     if (partRef.current) partRef.current.dispose();
 

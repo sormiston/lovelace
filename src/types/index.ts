@@ -1,4 +1,4 @@
-import type { ClefNote, StaveNote, Tuplet } from "vexflow4";
+import type { StaveNote, Tuplet } from "vexflow4";
 
 // Basic musical elements
 export type BaseDuration = "1" | "2" | "4" | "8" | "16" | "32" | "64" | "128";
@@ -75,7 +75,6 @@ export type Score = {
   keySignature: string; // e.g., "C", "Gm"
   timeSignature: TimeSignature;
   tempo: Tempo;
-  // clef: ClefNames;
   tracks: Track[];
 };
 
@@ -101,7 +100,7 @@ export type TieAnchor = {
 };
 
 export type ProcessNoteGroupResult = {
-  notes: (StaveNote | ClefNote)[];
+  notes: StaveNote[];
   tuplets: Tuplet[];
 };
 

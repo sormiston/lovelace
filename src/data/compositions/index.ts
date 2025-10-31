@@ -1436,6 +1436,58 @@ const clefChange: Score = {
   ],
 };
 
+const clefChangeHomophonic: Score = {
+  name: "clefChangeHomophonic",
+  tempo: { bpm: 100, baseDuration: "4" },
+  keySignature: "D",
+  timeSignature: [2, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "F", octave: 4 },
+                      { step: "A", octave: 4 },
+                      { step: "D", octave: 5 },
+                    ],
+                    duration: "4",
+                  },
+                ],
+              },
+              {
+                type: "SIMPLE",
+                clef: "bass",
+                members: [
+                  {
+                    type: "SONORITY",
+                    notes: [
+                      { step: "D", octave: 3 },
+                      { step: "F", octave: 3 },
+                      { step: "A", octave: 3 },
+                    ],
+                    duration: "4",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 const monophonicTies: Score = {
   name: "monophonicTies",
   tempo: { bpm: 120, baseDuration: "4" },
@@ -1677,6 +1729,7 @@ const scores = {
     fSHarMScale,
     bassClef,
     clefChange,
+    clefChangeHomophonic,
   ],
   ties: [monophonicTies, monophonicWTuplet, homophonicTies],
 };

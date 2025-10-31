@@ -166,7 +166,7 @@ function inlineClefChange(state: toVFRunState): PostCreateHook {
 // END: PostCreateHook callbacks
 
 /** PRINCIPLE FUNCTION CALL / ENTRY POINT FOR VEXFLOW VOICE CREATION */
-export function mapMeasureToVFVoices(
+export function parseScoreToVFDrawables(
   measure: Measure,
   timeSig: TimeSignature,
   clef: ClefNames
@@ -188,62 +188,54 @@ export function mapMeasureToVFVoices(
   ];
 
   // RUN
+  const artifacts = {
+    tuplets: [] as Tuplet[],
+    tieLigations: [] as TieLigation[],
+  };
+
   const voices = measure.voices.map((voice) => {
     state.tieState.open.length = 0;
     state.tieState.closed.length = 0;
 
-    const data = voice.reduce(
-      (
-        acc: ProcessNoteGroupResult & { tieLigations: TieLigation[] },
-        curr: NoteGrouping
-      ) => {
-        const { notes, tuplets } = processNoteGroup(curr, postCreateHooks);
-        acc.notes.push(...notes);
-        acc.tuplets.push(...tuplets);
+    const voiceNotes = voice
+      .map((ng) => {
+        const { notes, tuplets } = processNoteGroup(ng, postCreateHooks);
+        artifacts.tuplets.push(...tuplets);
         if (state.tieState.closed.length > 0) {
-          acc.tieLigations.push(...state.tieState.closed);
+          artifacts.tieLigations.push(...state.tieState.closed);
           state.tieState.closed.length = 0;
         }
 
-        return acc;
-      },
-      // TODO: type this better
-      { notes: [], tuplets: [], tieLigations: [] } as ProcessNoteGroupResult & {
-        tieLigations: TieLigation[];
-      }
-    );
+        return notes;
+      })
+      .flat();
 
-    return data;
+    return voiceNotes;
   });
 
-  const { tickedVoices, tuplets, tieLigations } = voices.reduce(
-    (acc, data) => {
-      const voice = new Voice({
-        num_beats: timeSig[0],
-        beat_value: timeSig[1],
-      })
-        .setMode(state.voiceMode)
-        .addTickables(data.notes);
+  const tickedVoices = voices.map((staveNotes) => {
+    const voice = new Voice({
+      num_beats: timeSig[0],
+      beat_value: timeSig[1],
+    })
+      .setMode(state.voiceMode)
+      .addTickables(staveNotes);
 
-      acc.tickedVoices.push(voice);
-      acc.tuplets.push(...data.tuplets);
-      acc.tieLigations.push(...data.tieLigations);
+    return voice;
+  });
 
-      return acc;
-    },
-    // TODO: type this better
-    {
-      tickedVoices: [] as Voice[],
-      tuplets: [] as Tuplet[],
-      tieLigations: [] as TieLigation[],
-    }
-  );
-
-  return { tickedVoices, tuplets, tieLigations };
+  return {
+    tickedVoices,
+    tuplets: artifacts.tuplets,
+    tieLigations: artifacts.tieLigations,
+  };
 }
 
 function processNoteGroup(ng: NoteGrouping, postCreateHooks: PostCreateHook[]) {
-  const result: ProcessNoteGroupResult = { notes: [], tuplets: [] };
+  const result: ProcessNoteGroupResult = {
+    notes: [],
+    tuplets: [],
+  };
   const { clef } = ng;
   if (ng.type === "SIMPLE") {
     const notes = ng.members.map((member) =>
@@ -265,7 +257,8 @@ function mapTupletToStaveNotes(
   tupletGroup: TupletGrouping,
   clef: ClefNames,
   postCreateHooks: PostCreateHook[]
-): [(StaveNote | ClefNote)[], Tuplet] {
+): //TODO: improve typing
+[StaveNote[], Tuplet] {
   const notes = tupletGroup.members.map((m) =>
     mapMemberToNote(m, clef, postCreateHooks)
   );
