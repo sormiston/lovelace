@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { Score } from "@/types";
 import ScoreRenderer, { type ScoreRendererHandle } from "./ScoreRenderer";
-import compositions from "@/data/compositions";
+import { scores } from "@/data/compositions";
 
 export const Wrapper = ({ score }: { score: Score }) => {
   const ref = useRef<ScoreRendererHandle>(null);
@@ -16,10 +16,11 @@ export const Wrapper = ({ score }: { score: Score }) => {
     </>
   );
 };
+
 describe("<ScoreRenderer />", () => {
   it("renders", () => {
     cy.viewport(1000, 600);
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<Wrapper score={compositions.simple[0]} />);
+    cy.mount(<Wrapper score={scores.singleMeasureScores.simple[0]} />);
   });
 });
