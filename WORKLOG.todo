@@ -101,10 +101,15 @@ BUGS:
   ☐ 5 - advanced tuplets (see quintSext) all whacky engraving (beaming and brackets and text display of ratio)
   
 TECH DEBT:
-  ☐ 4 - some ref abuse going on in Demo.app, concerning categories
+  ✔ 4 - some ref abuse going on in Demo.app, concerning categories @done (05/11/2025, 12:05:51)
   ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)
   ☐ 2 - do not repeat fractional math functions in my code; use the Fraction class available from vexflow4 where possible
   ✔ 2 - having clef changes as Note Context Members feels redundant --- clef change notes should be determined based on clef property of NoteContext types @done (31/10/2025, 16:55:34)
   ✘ 3 - lazy load score to simulate db / async io and stress test no-data state of main rendering component (at time of writing, <App />) @cancelled (31/10/2025, 16:55:58)
+  ☐ 3 - typescript is conducting too strong of an inference on the structure of exported scores object (`@/data/compositions`).
+        -- this produces "dev knows better" type ts-errors such as `'string' can't be used to index type [object-like type with specifically known keys]`
+        -- in fact, these score objects are mocks for data that should be fetched over the wire and de-serialized
+        -- TODO: commit and retrieve score objects to localStorage to better simulate real-world conditions
+        -- and sidestep TS' compile-time inferences  
   ✔ 5 - namespacing / splitting of utils (libs) in VF / Tone.js integrations @done (28/10/2025, 18:44:51)
   ☐ 4 - typing of tuple and object type events (2nd arg) and callback (1st arg) in Tone.Part can be improved by pulling types from Tone.js
