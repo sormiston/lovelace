@@ -2,7 +2,7 @@ import { Score } from "@/types";
 
 const fourFourBarRest: Score = {
   name: "fourFourBarRest",
-  tempo: { bpm: 60, baseDuration: "4" },
+  tempo: { bpm: 140, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
   tracks: [

@@ -178,10 +178,23 @@ export default function ScoreRenderer({
       return;
     }
 
-    const targetMeasure = score.tracks[0].measures[0];
-    const resolvedTimeSig = targetMeasure.timeSignature || score.timeSignature;
+    const { measures } = score.tracks[0];
+    let offset = 0;
+    const events: PartEventRich[] = [];
 
-    const events = toneJsUtils.generateClickTrack(score.tempo, resolvedTimeSig);
+    for (const m of measures) {
+      const resolvedTempo = m.tempo || score.tempo;
+      const resolvedTimeSig = m.timeSignature || score.timeSignature;
+
+      const { playbackData, offset: newOffset } =
+        toneJsUtils.generateClickTrack(resolvedTempo, resolvedTimeSig, offset);
+
+      offset = newOffset;
+      events.push(...playbackData);
+    }
+
+    console.log(events);
+
     setMetronomeEvents(events);
 
     return () => {

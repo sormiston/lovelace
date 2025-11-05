@@ -7,16 +7,17 @@ import type {
   PlaybackSonority,
   Tempo,
   TimeSignature,
-  Fraction
+  Fraction,
 } from "@/types";
 import { ensureExhaustive } from "@/lib/_utils";
 
 export function generateClickTrack(
   tempo: Tempo,
-  timeSig: TimeSignature
-): PartEventRich[] {
+  timeSig: TimeSignature,
+  offset: number = 0
+): { playbackData: PartEventRich[]; offset: number } {
   const playbackData: PartEventRich[] = [];
-  let currentTime = 0;
+  let currentTime = offset;
 
   const numBeats = tempo.compound ? timeSig[0] / 3 : timeSig[0];
   const beatFraction = tempo.compound
@@ -38,7 +39,7 @@ export function generateClickTrack(
     currentTime += beatDurationSeconds;
   }
 
-  return playbackData;
+  return { playbackData, offset: currentTime };
 }
 
 export function noteDurationToSeconds(
@@ -248,7 +249,7 @@ function transformVoiceForPlayback(
     if (transformedGrouping) {
       transformed.push(transformedGrouping);
     }
-    console.log("pendingTie", pendingTie);
+
     pendingTie = nextTie;
   }
 

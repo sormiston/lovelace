@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import * as toneJsUtils from "./toneJsUtils";
 import { scores } from "@/data/compositions";
-import type { Score } from "@/types";
+import type { PartEventRich, Score } from "@/types";
 import { expectedPlaybackEvents } from "./__fixtures__/playbackEvents";
+import { expectedMetronomePlaybackEvents } from "./__fixtures__/metronomePlaybackEvents";
+
+type TestCase = [string, string, PartEventRich[]];
 
 describe("noteDurationToSeconds", () => {
   it("returns 1 second for a quarter note at 60 bpm", () => {
@@ -18,8 +21,9 @@ describe("noteDurationToSeconds", () => {
 describe("measuresToPlayback", () => {
   describe("singleMeasureScores", () => {
     const compositions = scores.singleMeasureScores;
+    const expectedCases = expectedPlaybackEvents.singleMeasureScores;
 
-    function resolveScore(category: keyof typeof compositions, name: string) {
+    function resolveScore(category: string, name: string) {
       const score = compositions[category]?.find((s: Score) => s.name === name);
       if (!score)
         throw new Error(`Score not found for ${String(category)}:${name}`);
@@ -28,265 +32,141 @@ describe("measuresToPlayback", () => {
       return { targetMeasures, tempoResolved };
     }
 
-    it("correctly processes simple:oneVoice", () => {
-      const score = compositions.simple.find((s) => s.name === "oneVoice");
-      if (!score) throw new Error("Score not found");
-      const targetMeasures = score.tracks[0].measures;
-      const tempoResolved = targetMeasures[0].tempo || score.tempo;
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.simple.oneVoice;
+    const singleMeasureCases: TestCase[] = Object.entries(expectedCases)
+      .map(([cat, v]) => [
+        ...Object.entries(v).map(
+          ([caseName, caseData]) =>
+            [cat, caseName, caseData as PartEventRich[]] satisfies TestCase
+        ),
+      ])
+      .flat();
 
-      expect(events).toMatchObject(expected);
+    it.each(singleMeasureCases)(
+      "correctly processes %s:%s",
+      (category, name, expectation) => {
+        const { targetMeasures, tempoResolved } = resolveScore(category, name);
+
+        const events = toneJsUtils.measuresToPlayback(
+          targetMeasures,
+          tempoResolved
+        );
+
+        expect(events).toMatchObject(expectation);
+      }
+    );
+  });
+});
+
+describe("generateClickTrack", () => {
+  describe("single measure tests", () => {
+    it("generates correct number of click events for 4/4 measure at 60 bpm", () => {
+      const { playbackData } = toneJsUtils.generateClickTrack(
+        { bpm: 60, baseDuration: "4" },
+        [4, 4],
+        0
+      );
+      expect(playbackData.length).toBe(4); // 4 quarter note clicks in a 4/4 measure
+      expect(playbackData[0][0]).toBe(0); // First click at time 0
+      expect(playbackData[1][0]).toBe(1);
+      expect(playbackData[2][0]).toBe(2);
+      expect(playbackData[3][0]).toBe(3);
     });
 
-    it("correctly processes simple:multiVoice", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "simple",
-        "multiVoice"
+    it("generates correct click events for quarternote = 120 in 4/4 time", () => {
+      const fixture = expectedMetronomePlaybackEvents.find((e) => {
+        const measure = e.measures[0];
+        return (
+          measure.timeSignature[0] === 4 &&
+          measure.timeSignature[1] === 4 &&
+          measure.tempo.bpm === 120 &&
+          measure.tempo.baseDuration === "4"
+        );
+      });
+
+      if (!fixture)
+        throw new Error(
+          "No fixture found for metronome case: single measure quarternote = 120 in 4/4 time"
+        );
+
+      const { playbackData } = toneJsUtils.generateClickTrack(
+        fixture.measures[0].tempo,
+        fixture.measures[0].timeSignature
       );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.simple.multiVoice;
-      expect(events).toMatchObject(expected);
+
+      expect(playbackData).toEqual(fixture.data);
     });
 
-    it("correctly processes simple:simpleThreeEight", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "simple",
-        "simpleThreeEight"
+    it("generates correct click events for eighthnote = 140 in 3/8 time", () => {
+      const fixture = expectedMetronomePlaybackEvents.find((e) => {
+        const measure = e.measures[0];
+        return (
+          measure.timeSignature[0] === 3 &&
+          measure.timeSignature[1] === 8 &&
+          measure.tempo.bpm === 140 &&
+          measure.tempo.baseDuration === "8"
+        );
+      });
+
+      if (!fixture)
+        throw new Error(
+          "No fixture found for metronome case: single measure eighthnote = 140 in 3/8 time"
+        );
+
+      const { playbackData } = toneJsUtils.generateClickTrack(
+        fixture.measures[0].tempo,
+        fixture.measures[0].timeSignature
       );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.simple.simpleThreeEight;
-      expect(events).toMatchObject(expected);
+
+      expect(playbackData).toEqual(fixture.data);
     });
 
-    it("correctly processes dotted:singleDotted", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "dotted",
-        "singleDotted"
+    it("generates correct click events for halfnote = 60 in 2/2 time", () => {
+      const fixture = expectedMetronomePlaybackEvents.find((e) => {
+        const measure = e.measures[0];
+        return (
+          measure.timeSignature[0] === 2 &&
+          measure.timeSignature[1] === 2 &&
+          measure.tempo.bpm === 60 &&
+          measure.tempo.baseDuration === "2"
+        );
+      });
+
+      if (!fixture)
+        throw new Error(
+          "No fixture found for metronome case: single measure eighthnote = 140 in 3/8 time"
+        );
+
+      const { playbackData } = toneJsUtils.generateClickTrack(
+        fixture.measures[0].tempo,
+        fixture.measures[0].timeSignature
       );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.dotted.singleDotted;
-      expect(events).toMatchObject(expected);
+
+      expect(playbackData).toEqual(fixture.data);
     });
 
-    it("correctly processes dotted:doubleDotted", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "dotted",
-        "doubleDotted"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.dotted.doubleDotted;
-      expect(events).toMatchObject(expected);
-    });
+    it("generates correct click events for dotted-quarter = 60 in 6/8 time", () => {
+      const fixture = expectedMetronomePlaybackEvents.find((e) => {
+        const measure = e.measures[0];
+        return (
+          measure.timeSignature[0] === 6 &&
+          measure.timeSignature[1] === 8 &&
+          measure.tempo.bpm === 60 &&
+          measure.tempo.baseDuration === "4" &&
+          measure.tempo.compound
+        );
+      });
 
-    it("correctly processes tuplets:triplets1", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tuplets",
-        "triplets1"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tuplets.triplets1;
-      expect(events).toMatchObject(expected);
-    });
+      if (!fixture)
+        throw new Error(
+          "No fixture found for metronome case: single measure eighthnote = 140 in 3/8 time"
+        );
 
-    it("correctly processes tuplets:bigTriplets", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tuplets",
-        "bigTriplets"
+      const { playbackData } = toneJsUtils.generateClickTrack(
+        fixture.measures[0].tempo,
+        fixture.measures[0].timeSignature
       );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tuplets.bigTriplets;
-      expect(events).toMatchObject(expected);
-    });
 
-    it("correctly processes tuplets:quintSex", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tuplets",
-        "quintSext"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tuplets.quintSext;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes compoundMeter:sixEightA", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "compoundMeter",
-        "sixEightA"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.compoundMeter.sixEightA;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes compoundMeter:nineEightA", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "compoundMeter",
-        "nineEightA"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.compoundMeter.nineEightA;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes compoundMeter:sixEightB", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "compoundMeter",
-        "sixEightB"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.compoundMeter.sixEightB;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes compoundMeter:twelveEightWRests", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "compoundMeter",
-        "twelveEightWRests"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.compoundMeter.twelveEightWRests;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes tonality:eMajorScale", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tonality",
-        "eMajorScale"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tonality.eMajorScale;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes tonality:cSMelMinScale", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tonality",
-        "cSMelMinScale"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tonality.cSMelMinScale;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes tonality:appliedCMaj", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tonality",
-        "appliedCMaj"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tonality.appliedCMaj;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes tonality:fSHarMScale", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tonality",
-        "fSHarMScale"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tonality.fSHarMScale;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes tonality:bassClef", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tonality",
-        "bassClef"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tonality.bassClef;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes tonality:clefChange", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "tonality",
-        "clefChange"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.tonality.clefChange;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes ties:monophonicWTuplet", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "ties",
-        "monophonicWTuplet"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.ties.monophonicWTuplet;
-      expect(events).toMatchObject(expected);
-    });
-
-    it("correctly processes ties:homophonicTies", () => {
-      const { targetMeasures, tempoResolved } = resolveScore(
-        "ties",
-        "homophonicTies"
-      );
-      const events = toneJsUtils.measuresToPlayback(
-        targetMeasures,
-        tempoResolved
-      );
-      const expected = expectedPlaybackEvents.ties.homophonicTies;
-      expect(events).toMatchObject(expected);
+      expect(playbackData).toEqual(fixture.data);
     });
   });
 });
