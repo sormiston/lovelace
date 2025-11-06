@@ -19,4 +19,22 @@ describe("VRT :: <ScoreRenderer />", () => {
       });
     });
   });
+
+  describe("3-measure scores", () => {
+    const compositions = scores.threeMeasureScores;
+
+    const categories = Object.keys(
+      compositions
+    ) as (keyof typeof compositions)[];
+
+    categories.forEach((category) => {
+      compositions[category].forEach((score) => {
+        it(`${category}:${score.name} matches snapshot`, () => {
+          cy.viewport(1000, 600);
+          cy.mount(<Wrapper score={score} />);
+          cy.get("#vf").matchImageSnapshot();
+        });
+      });
+    });
+  });
 });

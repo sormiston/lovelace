@@ -2,6 +2,7 @@ import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import * as Tone from "tone";
 import {
   Accidental,
+  Barline,
   Beam,
   Formatter,
   Stave,
@@ -87,79 +88,101 @@ export default function ScoreRenderer({
       div
     );
 
-    const targetMeasure = score.tracks[0].measures[0];
-    const resolvedTimeSig = score.timeSignature;
-    const resolvedTempo = targetMeasure.tempo || score.tempo;
-    const resolvedKeySig = targetMeasure.keySignature || score.keySignature;
-    const resolvedClef = targetMeasure.voices[0][0].clef;
+    // TODO: FTLOG split, order, and migrate this into lib/core/vexflowUtils
+    // as necessary
 
-    const {
-      tickedVoices: voices,
-      tuplets,
-      tieLigations,
-    } = vexflowUtils.parseScoreToVFDrawables(
-      targetMeasure,
-      resolvedTimeSig,
-      resolvedClef
-    );
+    const targetMeasures = score.tracks[0].measures;
+    let nextStaveX = 10;
 
-    Accidental.applyAccidentals(voices, resolvedKeySig);
+    targetMeasures.forEach((measure, idx, arr) => {
+      const isFirst = idx === 0;
+      const isLast = idx === arr.length - 1;
 
-    const formatter = new Formatter();
-    const minNoteArea = formatter
-      .joinVoices(voices)
-      .preCalculateMinTotalWidth(voices);
+      const resolvedTimeSig = measure.timeSignature || score.timeSignature;
+      const resolvedTempo = measure.tempo || score.tempo;
+      const resolvedKeySig = measure.keySignature || score.keySignature;
+      const resolvedClef = measure.voices[0][0].clef;
 
-    const leftGlyphWidth = vexflowUtils.measureLeftGlyphs({
-      clef: resolvedClef,
-      key: resolvedKeySig,
-      time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,
-    });
-    const RIGHT_PADDING = 20;
+      const {
+        tickedVoices: voices,
+        tuplets,
+        tieLigations,
+      } = vexflowUtils.parseMeasureToVFDrawables(
+        measure,
+        resolvedTimeSig,
+        resolvedClef
+      );
 
-    const desiredNoteArea = Math.max(minNoteArea, 200);
-    const staveWidth = leftGlyphWidth + desiredNoteArea + RIGHT_PADDING;
+      Accidental.applyAccidentals(voices, resolvedKeySig);
+      const beamConfig = vexflowUtils.generateBeamConfig(resolvedTimeSig);
+      const beamsByVoice = voices.map((v) => {
+        const stemmableNotes = v
+          .getTickables()
+          .filter((t) => t instanceof StemmableNote);
+        return Beam.generateBeams(stemmableNotes, beamConfig);
+      });
 
-    let stave = new Stave(10, 40, staveWidth);
-    const xCenter = (RENDERER_WIDTH - stave.getWidth()) / 2;
+      const ties = tieLigations.map(
+        ({ start, end, firstIndices, lastIndices }) =>
+          new StaveTie({
+            first_note: start,
+            last_note: end,
+            first_indices: firstIndices,
+            last_indices: lastIndices,
+          })
+      );
 
-    stave
-      .addClef(resolvedClef)
-      .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
-      .addKeySignature(resolvedKeySig)
-      .setContext(context)
-      .setX(xCenter);
+      const formatter = new Formatter();
+      const minNoteArea = formatter
+        .joinVoices(voices)
+        .preCalculateMinTotalWidth(voices);
 
-    stave = vexflowUtils.attachStaveTempo(stave, resolvedTempo);
+      const leftGlyphWidth = isFirst
+        ? vexflowUtils.measureLeftGlyphs({
+            clef: resolvedClef,
+            key: resolvedKeySig,
+            time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,
+          })
+        : 0;
 
-    stave.draw();
+      // const RIGHT_PADDING = 20;
+      const desiredNoteArea = minNoteArea + 85;
+      // const staveWidth = leftGlyphWidth + desiredNoteArea + RIGHT_PADDING;
+      const staveWidth = leftGlyphWidth + desiredNoteArea;
 
-    const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5;
-    formatter.format(voices, actualNoteArea);
+      let stave = new Stave(nextStaveX, 40, staveWidth);
 
-    const beamConfig = vexflowUtils.generateBeamConfig(resolvedTimeSig);
-    const beamsByVoice = voices.map((v) => {
-      const stemmableNotes = v
-        .getTickables()
-        .filter((t) => t instanceof StemmableNote);
-      return Beam.generateBeams(stemmableNotes, beamConfig);
-    });
+      // TODO: will need to beef up conditions to include detected measure-to-measure changes in:
+      // clef, timeSig, keySig
+      if (isFirst) {
+        stave
+          .addClef(resolvedClef)
+          .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
+          .addKeySignature(resolvedKeySig);
 
-    voices.forEach((v) => v.draw(context, stave));
-    beamsByVoice.flat().forEach((b) => b.setContext(context).draw());
-    tuplets.forEach((a) => a.setContext(context).draw());
-    const ties = tieLigations.map(
-      ({ start, end, firstIndices, lastIndices }) =>
-        new StaveTie({
-          first_note: start,
-          last_note: end,
-          first_indices: firstIndices,
-          last_indices: lastIndices,
-        })
-    );
+        stave = vexflowUtils.attachStaveTempo(stave, resolvedTempo, leftGlyphWidth);
+      }
 
-    ties.forEach((t) => {
-      t.setContext(context).draw();
+      if (isLast) {
+        stave.setEndBarType(Barline.type.END);
+      }
+
+      stave.setContext(context);
+
+      stave.draw();
+
+      // const actualNoteArea = stave.getNoteEndX() - stave.getNoteStartX() - 5;
+      formatter.formatToStave(voices, stave);
+
+      voices.forEach((v) => v.draw(context, stave));
+      beamsByVoice.flat().forEach((b) => b.setContext(context).draw());
+      tuplets.forEach((a) => a.setContext(context).draw());
+
+      ties.forEach((t) => {
+        t.setContext(context).draw();
+      });
+
+      nextStaveX += stave.getWidth();
     });
 
     return () => {
@@ -182,6 +205,9 @@ export default function ScoreRenderer({
     let offset = 0;
     const events: PartEventRich[] = [];
 
+    // TODO: move into toneJsUtils
+    // we need a method in core lib for handling multiple measures
+    // shouldn't be responsibility of the caller
     for (const m of measures) {
       const resolvedTempo = m.tempo || score.tempo;
       const resolvedTimeSig = m.timeSignature || score.timeSignature;
@@ -192,8 +218,6 @@ export default function ScoreRenderer({
       offset = newOffset;
       events.push(...playbackData);
     }
-
-    console.log(events);
 
     setMetronomeEvents(events);
 

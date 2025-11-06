@@ -166,7 +166,7 @@ function inlineClefChange(state: toVFRunState): PostCreateHook {
 // END: PostCreateHook callbacks
 
 /** PRINCIPLE FUNCTION CALL / ENTRY POINT FOR VEXFLOW VOICE CREATION */
-export function parseScoreToVFDrawables(
+export function parseMeasureToVFDrawables(
   measure: Measure,
   timeSig: TimeSignature,
   clef: ClefNames
@@ -339,7 +339,11 @@ export function generateBeamConfig([num, den]: TimeSignature): BeamConfig {
   };
 }
 
-export function attachStaveTempo(stave: Stave, tempo: Tempo) {
+export function attachStaveTempo(
+  stave: Stave,
+  tempo: Tempo,
+  leftGlyphWidth: number
+) {
   if (!tempo) return stave;
   const staveTempo = new StaveTempo(
     {
@@ -347,10 +351,9 @@ export function attachStaveTempo(stave: Stave, tempo: Tempo) {
       ...(tempo.compound && { dots: 1 }),
       bpm: tempo.bpm,
     },
-    0,
+    leftGlyphWidth * -1 + 5,
     -10
   );
-
   stave.addModifier(staveTempo);
 
   return stave;
