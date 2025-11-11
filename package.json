@@ -12,7 +12,7 @@
     "cy:open": "cypress open",
     "cy:run:component": "cypress run --component",
     "cy:run:component:snap-update": "cypress run --component --env updateSnapshots=true && rimraf -g './cypress/snapshots/**/__diff_output__'",
-    "cy:run:component:vrt": "cypress run --component --spec \"src/**/*VRT*.cy.{ts,tsx}\""
+    "cy:run:component:vrt": "cypress run --env requireSnapshots=true --component --spec \"src/**/*VRT*.cy.{ts,tsx}\""
   },
   "dependencies": {
     "next": "15.5.4",

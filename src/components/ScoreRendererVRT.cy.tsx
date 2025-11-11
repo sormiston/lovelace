@@ -11,7 +11,7 @@ describe("VRT :: <ScoreRenderer />", () => {
 
     categories.forEach((category) => {
       compositions[category].forEach((score) => {
-        it(`${category}:${score.name} matches snapshot`, () => {
+        it(`${category} -- ${score.name} matches snapshot`, () => {
           cy.viewport(1000, 600);
           cy.mount(<Wrapper score={score} />);
           cy.get("#vf").matchImageSnapshot();
@@ -29,7 +29,7 @@ describe("VRT :: <ScoreRenderer />", () => {
 
     categories.forEach((category) => {
       compositions[category].forEach((score) => {
-        it(`${category}:${score.name} matches snapshot`, () => {
+        it(`${category} -- ${score.name} matches snapshot`, () => {
           cy.viewport(1000, 600);
           cy.mount(<Wrapper score={score} />);
           cy.get("#vf").matchImageSnapshot();

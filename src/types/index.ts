@@ -62,7 +62,7 @@ export type Measure = {
   tempo?: Tempo;
   voices: VoiceLine[];
   leftBarline?: BarlineType;
-  rightBarline?: BarlineType; 
+  rightBarline?: BarlineType;
 };
 
 // High-level score structure
@@ -78,6 +78,13 @@ export type Score = {
   timeSignature: TimeSignature;
   tempo: Tempo;
   tracks: Track[];
+};
+
+export type MeasureParams = {
+  timeSig: TimeSignature;
+  tempo: Tempo;
+  keySig: string;
+  clef: ClefNames;
 };
 
 // TONE.JS PLAYBACK TYPES

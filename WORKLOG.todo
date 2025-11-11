@@ -63,7 +63,7 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
     ☐ 3-measure, whole bar rests:
       ✔ with barlines (https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-) @done (05/11/2025, 23:54:13)
       ✔ with ending barline @done (05/11/2025, 23:54:17)
-      ☐ with repeats
+      ✔ with repeats @done (11/11/2025, 14:10:56)
         ✔ repeat range: bar 1 @done (08/11/2025, 14:07:50)
           ✔ vexflow rendering @done (08/11/2025, 14:07:52)
           ✔ click track rendering @done (08/11/2025, 14:07:54)
@@ -74,8 +74,11 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
         ✔ repeat range: bar 3 @done (08/11/2025, 14:08:11)
         ✔ repeat ranges: 1 + 2, 3 @done (08/11/2025, 14:08:13)
   
-      ☐ change of time signature
+      ✔ change of time signature @done (11/11/2025, 15:36:22)
       ☐ change of key signature
+      ☐ change clef
+      ☐ change tempo
+      
 
     ☐ 3-measure, w music:
       ☐ with repeats

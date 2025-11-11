@@ -11,7 +11,7 @@ import {
   StemmableNote,
 } from "vexflow4";
 import { toneJsUtils, vexflowUtils } from "@/lib";
-import type { PartEventRich, Score } from "@/types";
+import type { MeasureParams, PartEventRich, Score } from "@/types";
 
 export interface ScoreRendererHandle {
   play: () => Promise<void>;
@@ -93,7 +93,15 @@ export default function ScoreRenderer({
     // as necessary
 
     const targetMeasures = score.tracks[0].measures;
+    const firstMeasure = targetMeasures[0];
     let nextStaveX = 10;
+
+    let prevMeasureParams: MeasureParams = {
+      timeSig: firstMeasure.timeSignature || score.timeSignature,
+      tempo: firstMeasure.tempo || score.tempo,
+      keySig: firstMeasure.keySignature || score.keySignature,
+      clef: firstMeasure.voices[0][0].clef,
+    };
 
     targetMeasures.forEach((measure, idx, arr) => {
       const isFirst = idx === 0;
@@ -168,6 +176,10 @@ export default function ScoreRenderer({
         );
       }
 
+      if (prevMeasureParams.timeSig !== resolvedTimeSig) {
+        stave.addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`);
+      }
+
       if (isLast) {
         stave.setEndBarType(Barline.type.END);
       }
@@ -196,6 +208,13 @@ export default function ScoreRenderer({
       });
 
       nextStaveX += stave.getWidth();
+
+      prevMeasureParams = {
+        timeSig: resolvedTimeSig,
+        tempo: resolvedTempo,
+        keySig: resolvedKeySig,
+        clef: resolvedClef,
+      };
     });
 
     return () => {
