@@ -180,6 +180,10 @@ export default function ScoreRenderer({
         stave.addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`);
       }
 
+      if (prevMeasureParams.keySig !== resolvedKeySig) {
+        stave.addKeySignature(resolvedKeySig, prevMeasureParams.keySig);
+      }
+
       if (isLast) {
         stave.setEndBarType(Barline.type.END);
       }

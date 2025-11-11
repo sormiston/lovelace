@@ -728,6 +728,73 @@ const changeTimeSignature: Score = {
   ],
 };
 
+const changeKeySignature: Score = {
+  name: "changeKeySignature",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          keySignature: "Gb",
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 const scores = {
   wholeBarRests: [
     fourFourBarRest,
@@ -738,8 +805,10 @@ const scores = {
     repeatBar1To3Rests,
     repeatBar2To3Rests,
     repeatBar1To2RepeatBar3Rests,
-    changeTimeSignature
+    changeTimeSignature,
+    changeKeySignature,
   ],
+
   withMusic: [repeatBar1],
 };
 
