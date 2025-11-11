@@ -76,8 +76,9 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
   
       ✔ change of time signature @done (11/11/2025, 15:36:22)
       ✔ change of key signature @done (11/11/2025, 15:57:12)
-      ☐ change clef
+      ✔ change clef @done (11/11/2025, 16:03:42)
       ☐ change tempo
+      ☐ change time, key, clef, and tempo
       
 
     ☐ 3-measure, w music:

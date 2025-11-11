@@ -184,6 +184,10 @@ export default function ScoreRenderer({
         stave.addKeySignature(resolvedKeySig, prevMeasureParams.keySig);
       }
 
+      if (prevMeasureParams.clef !== resolvedClef) {
+        stave.addClef(resolvedClef);
+      }
+
       if (isLast) {
         stave.setEndBarType(Barline.type.END);
       }
