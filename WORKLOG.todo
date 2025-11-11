@@ -64,12 +64,15 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
       ✔ with barlines (https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-) @done (05/11/2025, 23:54:13)
       ✔ with ending barline @done (05/11/2025, 23:54:17)
       ☐ with repeats
-        ☐ repeat range: bar 1
-        ☐ repeat range: bars 1 + 2
-        ☐ repeat range: bars 1 + 2 + 3
-        ☐ repeat range: bars 2 + 3
-        ☐ repeat range: bar 2
-        ☐ repeat range: bar 3
+        ✔ repeat range: bar 1 @done (08/11/2025, 14:07:50)
+          ✔ vexflow rendering @done (08/11/2025, 14:07:52)
+          ✔ click track rendering @done (08/11/2025, 14:07:54)
+        ✔ repeat range: bars 1 + 2 @done (08/11/2025, 14:07:58)
+        ✔ repeat range: bars 1 + 2 + 3 @done (08/11/2025, 14:08:03)
+        ✔ repeat range: bars 2 + 3 @done (08/11/2025, 14:08:06)
+        ✔ repeat range: bar 2 @done (08/11/2025, 14:08:09)
+        ✔ repeat range: bar 3 @done (08/11/2025, 14:08:11)
+        ✔ repeat ranges: 1 + 2, 3 @done (08/11/2025, 14:08:13)
   
       ☐ change of time signature
       ☐ change of key signature
@@ -117,6 +120,9 @@ BUGS:
 TECH DEBT:
   ✔ 4 - some ref abuse going on in Demo.app, concerning categories @done (05/11/2025, 12:05:51)
   ✔ semantic change of "Musical Event" to "Durational" (for semantics) @done (05/09/2025, 11:42:17)
+  ✔ 4 - refactor toneJsUtils tests "scoreToClickTrack > single measure tests" to: @done (08/11/2025, 14:07:03)
+        - drop fixture assertion pattern (let's be explicit about what interests us)
+        - make their calls at the proper entry point function, `scoreToClickTrack`
   ☐ 4 - do not repeat fractional math functions in my code; use the Fraction class available from vexflow4 where possible
   ✔ 2 - having clef changes as Note Context Members feels redundant --- clef change notes should be determined based on clef property of NoteContext types @done (31/10/2025, 16:55:34)
   ✘ 3 - lazy load score to simulate db / async io and stress test no-data state of main rendering component (at time of writing, <App />) @cancelled (31/10/2025, 16:55:58)

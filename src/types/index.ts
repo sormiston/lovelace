@@ -1,4 +1,4 @@
-import type { StaveNote, Tuplet } from "vexflow4";
+import type { StaveNote, Tuplet, BarlineType } from "vexflow4";
 
 // Basic musical elements
 export type BaseDuration = "1" | "2" | "4" | "8" | "16" | "32" | "64" | "128";
@@ -61,6 +61,8 @@ export type Measure = {
   keySignature?: string; // e.g., "C", "Gm"
   tempo?: Tempo;
   voices: VoiceLine[];
+  leftBarline?: BarlineType;
+  rightBarline?: BarlineType; 
 };
 
 // High-level score structure

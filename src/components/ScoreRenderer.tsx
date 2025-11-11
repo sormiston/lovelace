@@ -1,5 +1,6 @@
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import * as Tone from "tone";
+import { BarlineType } from "vexflow4";
 import {
   Accidental,
   Barline,
@@ -160,11 +161,23 @@ export default function ScoreRenderer({
           .addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`)
           .addKeySignature(resolvedKeySig);
 
-        stave = vexflowUtils.attachStaveTempo(stave, resolvedTempo, leftGlyphWidth);
+        stave = vexflowUtils.attachStaveTempo(
+          stave,
+          resolvedTempo,
+          leftGlyphWidth
+        );
       }
 
       if (isLast) {
         stave.setEndBarType(Barline.type.END);
+      }
+
+      if (measure.leftBarline === BarlineType.REPEAT_BEGIN) {
+        stave.setBegBarType(Barline.type.REPEAT_BEGIN);
+      }
+
+      if (measure.rightBarline === BarlineType.REPEAT_END) {
+        stave.setEndBarType(Barline.type.REPEAT_END);
       }
 
       stave.setContext(context);
@@ -201,24 +214,7 @@ export default function ScoreRenderer({
       return;
     }
 
-    const { measures } = score.tracks[0];
-    let offset = 0;
-    const events: PartEventRich[] = [];
-
-    // TODO: move into toneJsUtils
-    // we need a method in core lib for handling multiple measures
-    // shouldn't be responsibility of the caller
-    for (const m of measures) {
-      const resolvedTempo = m.tempo || score.tempo;
-      const resolvedTimeSig = m.timeSignature || score.timeSignature;
-
-      const { playbackData, offset: newOffset } =
-        toneJsUtils.generateClickTrack(resolvedTempo, resolvedTimeSig, offset);
-
-      offset = newOffset;
-      events.push(...playbackData);
-    }
-
+    const events = toneJsUtils.scoreToClickTrack(score);
     setMetronomeEvents(events);
 
     return () => {

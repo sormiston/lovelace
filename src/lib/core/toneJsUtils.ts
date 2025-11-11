@@ -8,10 +8,35 @@ import type {
   Tempo,
   TimeSignature,
   Fraction,
+  Track,
+  Score,
 } from "@/types";
 import { ensureExhaustive } from "@/lib/_utils";
+import { BarlineType } from "vexflow4";
 
-export function generateClickTrack(
+export function scoreToClickTrack(score: Score) {
+  const measures = convertRepeats(score.tracks[0]);
+  let offset = 0;
+  const events: PartEventRich[] = [];
+
+  for (const m of measures) {
+    const resolvedTempo = m.tempo || score.tempo;
+    const resolvedTimeSig = m.timeSignature || score.timeSignature;
+
+    const { playbackData, offset: newOffset } = measureToClickTrack(
+      resolvedTempo,
+      resolvedTimeSig,
+      offset
+    );
+
+    offset = newOffset;
+    events.push(...playbackData);
+  }
+
+  return events;
+}
+
+export function measureToClickTrack(
   tempo: Tempo,
   timeSig: TimeSignature,
   offset: number = 0
@@ -335,4 +360,46 @@ function noteGroupingToPlayback(
     data: playbackData,
     timeDelta: currentTime - offsetTime,
   };
+}
+
+// TODO: Unit Test the ever-loving heck out of this
+export function convertRepeats(track: Track) {
+  
+  const measures = [] as Measure[];
+  let copy = track.measures.slice();
+  let done = false;
+
+  while (!done) {
+    const startRepeatIdx = copy.findIndex(
+      (m) => m.leftBarline === BarlineType.REPEAT_BEGIN
+    );
+
+    if (startRepeatIdx < 0) {
+      measures.push(...copy);
+      done = true;
+      break;
+    }
+
+    const endRepeatIdx = copy.findIndex(
+      (m) => m.rightBarline === BarlineType.REPEAT_END
+    );
+
+    if (endRepeatIdx < 0) {
+      throw new Error("Unterminated Repeat");
+    }
+
+    const toOutput = copy.slice(0, startRepeatIdx);
+    measures.push(...toOutput);
+    const repeatedMeasures = copy.slice(startRepeatIdx, endRepeatIdx + 1);
+    measures.push(...repeatedMeasures);
+    measures.push(...repeatedMeasures);
+    copy = copy.slice(endRepeatIdx + 1);
+
+    if (copy.length === 0) {
+      done = true;
+      break;
+    }
+  }
+
+  return measures;
 }

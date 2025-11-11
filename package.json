@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "test:watch": "vitest",
     "cy:open": "cypress open",
     "cy:run:component": "cypress run --component",
     "cy:run:component:snap-update": "cypress run --component --env updateSnapshots=true && rimraf -g './cypress/snapshots/**/__diff_output__'",
