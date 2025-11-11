@@ -44,13 +44,26 @@ export function measureToClickTrack(
   const playbackData: PartEventRich[] = [];
   let currentTime = offset;
 
-  const numBeats = tempo.compound ? timeSig[0] / 3 : timeSig[0];
+  const measureFraction: Fraction = {
+    numerator: timeSig[0],
+    denominator: timeSig[1],
+  };
   const beatFraction = tempo.compound
     ? durationWithDotsToFraction(tempo.baseDuration, 1)
     : coerceDurationToFraction(tempo.baseDuration);
+  const beatsPerMeasure = fractionToFloat(
+    divideFractions(measureFraction, beatFraction)
+  );
+  const roundedBeats = Math.round(beatsPerMeasure);
+
+  if (Math.abs(roundedBeats - beatsPerMeasure) > 1e-9) {
+    throw new Error(
+      `Tempo beat unit ${tempo.baseDuration} does not evenly divide ${timeSig[0]}/${timeSig[1]}`
+    );
+  }
   const beatDurationSeconds = noteDurationToSeconds(beatFraction, tempo);
 
-  for (let i = 0; i < numBeats; i++) {
+  for (let i = 0; i < roundedBeats; i++) {
     playbackData.push([
       currentTime,
       {
@@ -157,6 +170,17 @@ function multiplyFraction(fraction: Fraction, multiplier: Fraction): Fraction {
   return simplifyFraction({
     numerator: fraction.numerator * multiplier.numerator,
     denominator: fraction.denominator * multiplier.denominator,
+  });
+}
+
+function divideFractions(dividend: Fraction, divisor: Fraction): Fraction {
+  if (divisor.numerator === 0) {
+    throw new Error("Cannot divide by zero-valued fraction");
+  }
+
+  return simplifyFraction({
+    numerator: dividend.numerator * divisor.denominator,
+    denominator: dividend.denominator * divisor.numerator,
   });
 }
 
@@ -364,7 +388,6 @@ function noteGroupingToPlayback(
 
 // TODO: Unit Test the ever-loving heck out of this
 export function convertRepeats(track: Track) {
-  
   const measures = [] as Measure[];
   let copy = track.measures.slice();
   let done = false;

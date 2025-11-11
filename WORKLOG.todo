@@ -77,7 +77,7 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
       ✔ change of time signature @done (11/11/2025, 15:36:22)
       ✔ change of key signature @done (11/11/2025, 15:57:12)
       ✔ change clef @done (11/11/2025, 16:03:42)
-      ☐ change tempo
+      ✔ change tempo @done (11/11/2025, 16:49:31)
       ☐ change time, key, clef, and tempo
       
 
@@ -115,6 +115,8 @@ SHOULD-DO ENHANCEMENTS:
   ☐ expose volume / velocity controls for metronome, synth playback
 
 BUGS: 
+  ✔ 1 - click track generation for 3-measures `changeTempo` needs to account for change of beat unit @done (11/11/2025, 16:49:04)
+        - when half note is assigned as unit in 4/4, we should only have 2 clicks on the bar not 4
   ✔ Whole bar rests should be centered @done (11/09/2025, 19:20:41)
   ✔ Stem Directions are not being auto-determined unless beamed @done (11/09/2025, 14:52:28)
   ☐ 3 - Stem Directions are not being auto-determined by voice

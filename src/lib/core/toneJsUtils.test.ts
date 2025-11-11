@@ -152,6 +152,21 @@ describe("scoreToClickTrack", () => {
         expect(event[0]).toBe(expectedTimings[idx]);
       });
     });
+
+    it("uses the tempo beat unit when it differs from the time signature denominator", () => {
+      const events = toneJsUtils.scoreToClickTrack({
+        tempo: { bpm: 60, baseDuration: "2" },
+        timeSignature: [4, 4],
+        tracks: [
+          {
+            measures: [{}],
+          },
+        ],
+      } as unknown as Score);
+
+      expect(events).toHaveLength(2);
+      expect(events.map((e) => e[0])).toEqual([0, 1]);
+    });
   });
 
   describe("3-measure tests", () => {
@@ -175,6 +190,33 @@ describe("scoreToClickTrack", () => {
 
       const events = toneJsUtils.scoreToClickTrack(score);
       expect(events).toHaveLength(6 * 4);
+    });
+
+    it("handles beat-unit changes across measures", () => {
+      const score = getScore(
+        "threeMeasureScores",
+        "wholeBarRests",
+        "changeTempo"
+      );
+
+      const events = toneJsUtils.scoreToClickTrack(score);
+      expect(events).toHaveLength(10);
+      const firstMeasure = events.slice(0, 4);
+      const secondMeasure = events.slice(4, 6);
+      const thirdMeasure = events.slice(6);
+
+      expect(firstMeasure).toHaveLength(4);
+      expect(secondMeasure).toHaveLength(2);
+      expect(thirdMeasure).toHaveLength(4);
+
+      const expectedTimings = [
+        0, 0.5, 1, 1.5, 2, 2.8333333333333335, 3.666666666666667,
+        4.166666666666667, 4.666666666666667, 5.166666666666667,
+      ];
+
+      events.forEach((event, idx) => {
+        expect(event[0]).toBe(expectedTimings[idx]);
+      });
     });
   });
 });

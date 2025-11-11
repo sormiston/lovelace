@@ -339,11 +339,7 @@ export function generateBeamConfig([num, den]: TimeSignature): BeamConfig {
   };
 }
 
-export function attachStaveTempo(
-  stave: Stave,
-  tempo: Tempo,
-  leftGlyphWidth: number
-) {
+export function attachStaveTempo(stave: Stave, tempo: Tempo, x: number) {
   if (!tempo) return stave;
   const staveTempo = new StaveTempo(
     {
@@ -351,7 +347,7 @@ export function attachStaveTempo(
       ...(tempo.compound && { dots: 1 }),
       bpm: tempo.bpm,
     },
-    leftGlyphWidth * -1 + 5,
+    x,
     -10
   );
   stave.addModifier(staveTempo);
