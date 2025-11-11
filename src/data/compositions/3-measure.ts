@@ -928,6 +928,78 @@ const changeTempo: Score = {
   ],
 };
 
+const changeMany: Score = {
+  // in this score change time signature, key signature, clef, and tempo all at once
+  name: "changeMany",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          timeSignature: [3, 4],
+          keySignature: "Eb",
+          tempo: { bpm: 90, baseDuration: "8" },
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "bass",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 const scores = {
   wholeBarRests: [
     fourFourBarRest,
@@ -941,7 +1013,8 @@ const scores = {
     changeTimeSignature,
     changeKeySignature,
     changeClef,
-    changeTempo
+    changeTempo,
+    changeMany
   ],
 
   withMusic: [repeatBar1],

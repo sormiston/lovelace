@@ -146,22 +146,32 @@ export default function ScoreRenderer({
         .joinVoices(voices)
         .preCalculateMinTotalWidth(voices);
 
-      // TODO: need to calculate this only accounting for glyphs that will actually be rendered
       const leftGlyphWidth = isFirst
         ? vexflowUtils.measureLeftGlyphs({
             clef: resolvedClef,
             key: resolvedKeySig,
             time: `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`,
           })
-        : 0;
+        : vexflowUtils.measureLeftGlyphs({
+            clef:
+              prevMeasureParams.clef !== resolvedClef
+                ? resolvedClef
+                : undefined,
+            key:
+              prevMeasureParams.keySig !== resolvedKeySig
+                ? resolvedKeySig
+                : undefined,
+            time:
+              prevMeasureParams.timeSig !== resolvedTimeSig
+                ? `${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`
+                : undefined,
+          });
 
       const desiredNoteArea = minNoteArea + 85;
       const staveWidth = leftGlyphWidth + desiredNoteArea;
 
       let stave = new Stave(nextStaveX, 40, staveWidth);
 
-      // TODO: will need to beef up conditions to include detected measure-to-measure changes in:
-      // clef, timeSig, keySig
       if (isFirst) {
         stave
           .addClef(resolvedClef)

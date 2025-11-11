@@ -98,72 +98,75 @@ export default function Demo() {
   };
 
   return (
-    <main className="flex flex-col justify-center align-center mt-8">
-      <div className="space-x-1 space-y-1 mx-auto px-[20%]">
-        <select
-          onChange={(e) =>
-            scoreSelectDispatch({ type: "SET_POOL", pool: e.target.value })
-          }
-          className="border rounded-sm p-2"
-        >
-          {scoreSelectState.availablePools.map((pool) => (
-            <option key={pool} value={pool}>
-              {pool}
-            </option>
-          ))}
-        </select>
+    <>
+      <h1 className="text-3xl p-4">Lovelace</h1>
+      <main className="flex flex-col justify-center align-center mt-8">
+        <div className="space-x-1 space-y-1 mx-auto px-[20%]">
+          <select
+            onChange={(e) =>
+              scoreSelectDispatch({ type: "SET_POOL", pool: e.target.value })
+            }
+            className="border rounded-sm p-2"
+          >
+            {scoreSelectState.availablePools.map((pool) => (
+              <option key={pool} value={pool}>
+                {pool}
+              </option>
+            ))}
+          </select>
 
-        <select
-          onChange={(e) =>
-            scoreSelectDispatch({
-              type: "SET_CATEGORY",
-              category: e.target.value,
-            })
-          }
-          className="border rounded-sm p-2"
-        >
-          {scoreSelectState.availableCategories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+          <select
+            onChange={(e) =>
+              scoreSelectDispatch({
+                type: "SET_CATEGORY",
+                category: e.target.value,
+              })
+            }
+            className="border rounded-sm p-2"
+          >
+            {scoreSelectState.availableCategories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
 
-        <select
-          onChange={(e) =>
-            scoreSelectDispatch({
-              type: "SET_SCORE_NAME",
-              scoreName: e.target.value,
-            })
-          }
-          className="border rounded-sm p-2"
-        >
-          {scoreSelectState.availableScoreNames.map((scoreName) => (
-            <option key={scoreName} value={scoreName}>
-              {scoreName}
-            </option>
-          ))}
-        </select>
-      </div>
+          <select
+            onChange={(e) =>
+              scoreSelectDispatch({
+                type: "SET_SCORE_NAME",
+                scoreName: e.target.value,
+              })
+            }
+            className="border rounded-sm p-2"
+          >
+            {scoreSelectState.availableScoreNames.map((scoreName) => (
+              <option key={scoreName} value={scoreName}>
+                {scoreName}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <ScoreRenderer
-        score={scoreSelectState.selectedScore}
-        metronomeActive={metronomeActive}
-        ref={scoreRendererRef}
-      />
-      <div className="space-x-1 mx-auto">
-        <button onClick={playMidi} className="control-button">
-          Play
-        </button>
-        <button
-          onClick={() => setMetronomeActive(!metronomeActive)}
-          className={`control-button ${
-            metronomeActive ? "control-button--active" : ""
-          }`}
-        >
-          + metronome
-        </button>
-      </div>
-    </main>
+        <ScoreRenderer
+          score={scoreSelectState.selectedScore}
+          metronomeActive={metronomeActive}
+          ref={scoreRendererRef}
+        />
+        <div className="space-x-1 mx-auto">
+          <button onClick={playMidi} className="control-button">
+            Play
+          </button>
+          <button
+            onClick={() => setMetronomeActive(!metronomeActive)}
+            className={`control-button ${
+              metronomeActive ? "control-button--active" : ""
+            }`}
+          >
+            + metronome
+          </button>
+        </div>
+      </main>
+    </>
   );
 }
