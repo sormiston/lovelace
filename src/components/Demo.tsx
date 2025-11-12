@@ -6,18 +6,24 @@ import ScoreRenderer, {
   type ScoreRendererHandle,
 } from "@/components/ScoreRenderer";
 
+// Define the valid pool and category types
+type ScorePool = keyof typeof scores;
+type ScoreCategory =
+  | keyof typeof scores.singleMeasureScores
+  | keyof typeof scores.threeMeasureScores;
+
 type ScoreSelectState = {
   availablePools: string[];
-  selectedPool: string;
-  availableCategories: string[];
-  selectedCategory: string;
+  selectedPool: ScorePool;
+  availableCategories: ScoreCategory[];
+  selectedCategory: ScoreCategory;
   availableScoreNames: string[];
   selectedScore: Score;
 };
 
 type ScoreSelectAction =
-  | { type: "SET_POOL"; pool: string }
-  | { type: "SET_CATEGORY"; category: string }
+  | { type: "SET_POOL"; pool: ScorePool }
+  | { type: "SET_CATEGORY"; category: ScoreCategory }
   | { type: "SET_SCORE_NAME"; scoreName: string };
 
 function scoreSelectReducer(
@@ -26,9 +32,10 @@ function scoreSelectReducer(
 ) {
   switch (action.type) {
     case "SET_POOL": {
-      const availableCategories = Object.keys(scores[action.pool]);
-      const firstCategory = availableCategories[0];
-      const availableScoreNames = scores[action.pool][firstCategory].map(
+      const pool = scores[action.pool] as Record<string, Score[]>;
+      const availableCategories = Object.keys(pool) as ScoreCategory[];
+      const firstCategory = availableCategories[0] as ScoreCategory;
+      const availableScoreNames = pool[firstCategory].map(
         (s: Score) => s.name
       ) as string[];
 
@@ -38,26 +45,27 @@ function scoreSelectReducer(
         availableCategories,
         selectedCategory: firstCategory,
         availableScoreNames,
-        selectedScore: scores[action.pool][firstCategory][0] as Score,
+        selectedScore: pool[firstCategory][0] as Score,
       };
     }
 
     case "SET_CATEGORY": {
-      const availableScoreNames = scores[state.selectedPool][
-        action.category
-      ].map((s: Score) => s.name) as string[];
+      const pool = scores[state.selectedPool] as Record<ScoreCategory, Score[]>;
+      const availableScoreNames = pool[action.category].map(
+        (s: Score) => s.name
+      ) as string[];
 
       return {
         ...state,
         selectedCategory: action.category,
         availableScoreNames,
-        selectedScore: scores[state.selectedPool][action.category][0] as Score,
+        selectedScore: pool[action.category][0] as Score,
       };
     }
 
     case "SET_SCORE_NAME": {
-      const availableScores =
-        scores[state.selectedPool][state.selectedCategory];
+      const pool = scores[state.selectedPool] as Record<ScoreCategory, Score[]>;
+      const availableScores = pool[state.selectedCategory];
       const targetScore = availableScores.find(
         (s: Score) => s.name === action.scoreName
       );
@@ -77,7 +85,9 @@ function scoreSelectReducer(
 const initialScoreSelectState: ScoreSelectState = {
   availablePools: Object.keys(scores),
   selectedPool: "singleMeasureScores",
-  availableCategories: Object.keys(scores.singleMeasureScores),
+  availableCategories: Object.keys(
+    scores.singleMeasureScores
+  ) as ScoreCategory[],
   selectedCategory: "simple",
   availableScoreNames: scores["singleMeasureScores"]["simple"].map(
     (s) => s.name
@@ -104,7 +114,10 @@ export default function Demo() {
         <div className="space-x-1 space-y-1 mx-auto px-[20%]">
           <select
             onChange={(e) =>
-              scoreSelectDispatch({ type: "SET_POOL", pool: e.target.value })
+              scoreSelectDispatch({
+                type: "SET_POOL",
+                pool: e.target.value as ScorePool,
+              })
             }
             className="border rounded-sm p-2"
           >
@@ -119,7 +132,7 @@ export default function Demo() {
             onChange={(e) =>
               scoreSelectDispatch({
                 type: "SET_CATEGORY",
-                category: e.target.value,
+                category: e.target.value as ScoreCategory,
               })
             }
             className="border rounded-sm p-2"
