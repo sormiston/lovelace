@@ -171,6 +171,7 @@ export default function ScoreRenderer({
       const staveWidth = leftGlyphWidth + desiredNoteArea;
 
       let stave = new Stave(nextStaveX, 40, staveWidth);
+      stave.setClefLines(resolvedClef);
 
       if (isFirst) {
         stave
@@ -185,12 +186,12 @@ export default function ScoreRenderer({
         stave.addTimeSignature(`${resolvedTimeSig[0]}/${resolvedTimeSig[1]}`);
       }
 
-      if (prevMeasureParams.keySig !== resolvedKeySig) {
-        stave.addKeySignature(resolvedKeySig, prevMeasureParams.keySig);
-      }
-
       if (prevMeasureParams.clef !== resolvedClef) {
         stave.addClef(resolvedClef);
+      }
+
+      if (prevMeasureParams.keySig !== resolvedKeySig) {
+        stave.addKeySignature(resolvedKeySig, prevMeasureParams.keySig);
       }
 
       if (prevMeasureParams.tempo !== resolvedTempo) {
@@ -263,7 +264,6 @@ export default function ScoreRenderer({
    */
   const buildPlaybackPart = () => {
     const events = toneJsUtils.scoreToPlayback(score);
-
     if (partRef.current) partRef.current.dispose();
 
     if (events) {

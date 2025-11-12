@@ -60,7 +60,7 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
       ✔ visual regression @done (28/10/2025, 18:45:09)
     
     PHASE 2: MULTI-MEASURE SUPPORT
-    ☐ 3-measure, whole bar rests:
+    ✔ 3-measure, whole bar rests: @done (12/11/2025, 15:11:54)
       ✔ with barlines (https://github.com/0xfe/vexflow/wiki/Tutorial#step-7-barlines--run-) @done (05/11/2025, 23:54:13)
       ✔ with ending barline @done (05/11/2025, 23:54:17)
       ✔ with repeats @done (11/11/2025, 14:10:56)
@@ -83,8 +83,10 @@ Mission 1: Development of a data structure which serves as "source of truth" to 
 
     ☐ 3-measure, w music:
       ✔ with repeats @done (12/11/2025, 01:45:31)
-      ☐ change of time signature
-      ☐ change of key signature
+      ✔ change of time signature @done (12/11/2025, 14:44:30)
+      ✔ change of key signature @done (12/11/2025, 14:44:32)
+      ✔ change of tempo @done (12/11/2025, 15:11:43)
+      ✔ change of clef @done (12/11/2025, 15:21:38)
       ☐ With ties over barlines
       ☐ with all of the above
 

@@ -57,6 +57,41 @@ describe("measuresToPlayback", () => {
       }
     );
   });
+
+  describe("threeMeasureScores", () => {
+    it("correctly processes withMusic:repeatBar1", () => {
+      const score = getScore("threeMeasureScores", "withMusic", "repeatBar1");
+      const events = toneJsUtils.scoreToPlayback(score);
+
+      expect(events).toHaveLength(8);
+    });
+    it("correctly processes withMusic:changeTimeSignature", () => {
+      const score = getScore(
+        "threeMeasureScores",
+        "withMusic",
+        "changeTimeSignature"
+      );
+      const events = toneJsUtils.scoreToPlayback(score);
+
+      expect(events).toHaveLength(9);
+    });
+    it("correctly processes withMusic:changeTempo", () => {
+      const score = getScore("threeMeasureScores", "withMusic", "changeTempo");
+      const events = toneJsUtils.scoreToPlayback(score);
+      if (!events) throw new Error("No events returned");
+
+      const expectedTimings = [
+        0, 1, 2, 3, 4, 4.666666666666667, 5.333333333333334, 6.000000000000001,
+        6.666666666666668, 7.166666666666668, 7.666666666666668,
+        8.166666666666668,
+      ];
+
+      expect(events).toHaveLength(12);
+      events.forEach((event, idx) => {
+        expect(event[0]).toBe(expectedTimings[idx]);
+      });
+    });
+  });
 });
 
 describe("scoreToClickTrack", () => {
@@ -230,11 +265,7 @@ describe("convertRepeats", () => {
   });
 
   it("3measure: bar 1 repeat: works as expected", () => {
-    const score = getScore(
-      "threeMeasureScores",
-      "wholeBarRests",
-      "repeatBar1"
-    );
+    const score = getScore("threeMeasureScores", "wholeBarRests", "repeatBar1");
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
     );
@@ -247,11 +278,7 @@ describe("convertRepeats", () => {
   });
 
   it("3measure: bar 2 repeat: works as expected", () => {
-    const score = getScore(
-      "threeMeasureScores",
-      "wholeBarRests",
-      "repeatBar2"
-    );
+    const score = getScore("threeMeasureScores", "wholeBarRests", "repeatBar2");
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
     );
@@ -264,11 +291,7 @@ describe("convertRepeats", () => {
   });
 
   it("3measure: bar 3 repeat: works as expected", () => {
-    const score = getScore(
-      "threeMeasureScores",
-      "wholeBarRests",
-      "repeatBar3"
-    );
+    const score = getScore("threeMeasureScores", "wholeBarRests", "repeatBar3");
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
     );
