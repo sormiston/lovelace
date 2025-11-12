@@ -1,8 +1,8 @@
 import { Score } from "@/types";
 import { BarlineType } from "vexflow4";
 
-const fourFourBarRest: Score = {
-  name: "fourFourBarRest",
+const fourFourBar: Score = {
+  name: "fourFourBar",
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
   timeSignature: [4, 4],
@@ -47,484 +47,6 @@ const fourFourBarRest: Score = {
         },
         {
           number: 3,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar1Rests: Score = {
-  name: "repeatBar1Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar2Rests: Score = {
-  name: "repeatBar2Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar3Rests: Score = {
-  name: "repeatBar3Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar1To2Rests: Score = {
-  name: "repeatBar1To2Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar1To3Rests: Score = {
-  name: "repeatBar1To3Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar2To3Rests: Score = {
-  name: "repeatBar2To3Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const repeatBar1To2RepeatBar3Rests: Score = {
-  name: "repeatBar1To2RepeatBar3Rests",
-  tempo: { bpm: 120, baseDuration: "4" },
-  keySignature: "C",
-  timeSignature: [4, 4],
-  tracks: [
-    {
-      name: "Piano Right Hand",
-      instrument: "acoustic_grand_piano",
-      measures: [
-        {
-          number: 1,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 2,
-          rightBarline: BarlineType.REPEAT_END,
-          voices: [
-            [
-              {
-                type: "SIMPLE",
-                clef: "treble",
-                members: [
-                  {
-                    type: "REST",
-                    duration: "1",
-                  },
-                ],
-              },
-            ],
-          ],
-        },
-        {
-          number: 3,
-          leftBarline: BarlineType.REPEAT_BEGIN,
-          rightBarline: BarlineType.REPEAT_END,
           voices: [
             [
               {
@@ -549,7 +71,7 @@ const repeatBar1: Score = {
   name: "repeatBar1",
   tempo: { bpm: 120, baseDuration: "4" },
   keySignature: "C",
-  timeSignature: [2, 4],
+  timeSignature: [4, 4],
   tracks: [
     {
       name: "Piano Right Hand",
@@ -566,24 +88,8 @@ const repeatBar1: Score = {
                 clef: "treble",
                 members: [
                   {
-                    type: "SONORITY",
-                    duration: "4",
-                    notes: [
-                      {
-                        step: "C",
-                        octave: 4,
-                      },
-                    ],
-                  },
-                  {
-                    type: "SONORITY",
-                    duration: "4",
-                    notes: [
-                      {
-                        step: "G",
-                        octave: 4,
-                      },
-                    ],
+                    type: "REST",
+                    duration: "1",
                   },
                 ],
               },
@@ -599,24 +105,8 @@ const repeatBar1: Score = {
                 clef: "treble",
                 members: [
                   {
-                    type: "SONORITY",
-                    duration: "4",
-                    notes: [
-                      {
-                        step: "A",
-                        octave: 4,
-                      },
-                    ],
-                  },
-                  {
-                    type: "SONORITY",
-                    duration: "4",
-                    notes: [
-                      {
-                        step: "D",
-                        octave: 4,
-                      },
-                    ],
+                    type: "REST",
+                    duration: "1",
                   },
                 ],
               },
@@ -632,24 +122,418 @@ const repeatBar1: Score = {
                 clef: "treble",
                 members: [
                   {
-                    type: "SONORITY",
-                    duration: "4",
-                    notes: [
-                      {
-                        step: "E",
-                        octave: 4,
-                      },
-                    ],
+                    type: "REST",
+                    duration: "1",
                   },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const repeatBar2: Score = {
+  name: "repeatBar2",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
                   {
-                    type: "SONORITY",
-                    duration: "4",
-                    notes: [
-                      {
-                        step: "D",
-                        octave: 4,
-                      },
-                    ],
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const repeatBar3: Score = {
+  name: "repeatBar3",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const repeatBar1To2: Score = {
+  name: "repeatBar1To2",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const repeatBar1To3: Score = {
+  name: "repeatBar1To3",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const repeatBar2To3: Score = {
+  name: "repeatBar2To3",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const repeatBar1To2RepeatBar3: Score = {
+  name: "repeatBar1To2RepeatBar3",
+  tempo: { bpm: 120, baseDuration: "4" },
+  keySignature: "C",
+  timeSignature: [4, 4],
+  tracks: [
+    {
+      name: "Piano Right Hand",
+      instrument: "acoustic_grand_piano",
+      measures: [
+        {
+          number: 1,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 2,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          number: 3,
+          leftBarline: BarlineType.REPEAT_BEGIN,
+          rightBarline: BarlineType.REPEAT_END,
+          voices: [
+            [
+              {
+                type: "SIMPLE",
+                clef: "treble",
+                members: [
+                  {
+                    type: "REST",
+                    duration: "1",
                   },
                 ],
               },
@@ -1000,24 +884,20 @@ const changeMany: Score = {
   ],
 };
 
-const scores = {
-  wholeBarRests: [
-    fourFourBarRest,
-    repeatBar1Rests,
-    repeatBar2Rests,
-    repeatBar3Rests,
-    repeatBar1To2Rests,
-    repeatBar1To3Rests,
-    repeatBar2To3Rests,
-    repeatBar1To2RepeatBar3Rests,
-    changeTimeSignature,
-    changeKeySignature,
-    changeClef,
-    changeTempo,
-    changeMany
-  ],
-
-  withMusic: [repeatBar1],
-};
+const scores = [
+  fourFourBar,
+  repeatBar1,
+  repeatBar2,
+  repeatBar3,
+  repeatBar1To2,
+  repeatBar1To3,
+  repeatBar2To3,
+  repeatBar1To2RepeatBar3,
+  changeTimeSignature,
+  changeKeySignature,
+  changeClef,
+  changeTempo,
+  changeMany,
+];
 
 export default scores;

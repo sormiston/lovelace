@@ -168,7 +168,7 @@ describe("scoreToClickTrack", () => {
       const score = getScore(
         "threeMeasureScores",
         "wholeBarRests",
-        "fourFourBarRest"
+        "fourFourBar"
       );
 
       const events = toneJsUtils.scoreToClickTrack(score);
@@ -179,7 +179,7 @@ describe("scoreToClickTrack", () => {
       const score = getScore(
         "threeMeasureScores",
         "wholeBarRests",
-        "repeatBar1To2RepeatBar3Rests"
+        "repeatBar1To2RepeatBar3"
       );
 
       const events = toneJsUtils.scoreToClickTrack(score);
@@ -220,7 +220,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "fourFourBarRest"
+      "fourFourBar"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -233,7 +233,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar1Rests"
+      "repeatBar1"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -250,7 +250,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar2Rests"
+      "repeatBar2"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -267,7 +267,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar3Rests"
+      "repeatBar3"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -284,7 +284,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar1To2Rests"
+      "repeatBar1To2"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -302,7 +302,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar1To3Rests"
+      "repeatBar1To3"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -321,7 +321,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar2To3Rests"
+      "repeatBar2To3"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
@@ -339,7 +339,7 @@ describe("convertRepeats", () => {
     const score = getScore(
       "threeMeasureScores",
       "wholeBarRests",
-      "repeatBar1To2RepeatBar3Rests"
+      "repeatBar1To2RepeatBar3"
     );
     const convertedMeasures = toneJsUtils.convertRepeats(
       score.tracks[0].measures
