@@ -51,13 +51,7 @@ describe("measuresToPlayback", () => {
       (category, name, expectation, poolName) => {
         const score = getScore(poolName, category, name);
 
-        const targetMeasures = score.tracks[0].measures;
-        const tempoResolved = targetMeasures[0].tempo || score.tempo;
-
-        const events = toneJsUtils.measuresToPlayback(
-          targetMeasures,
-          tempoResolved
-        );
+        const events = toneJsUtils.scoreToPlayback(score);
 
         expect(events).toMatchObject(expectation);
       }
@@ -228,7 +222,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "fourFourBarRest"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // expect convertedMeasures to equal original measures
     expect(convertedMeasures).toEqual(score.tracks[0].measures);
   });
@@ -239,7 +235,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar1Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 4 measures: measure 1, measure 1 (repeat), measure 2, measure 3
     expect(convertedMeasures.length).toBe(4);
     expect(convertedMeasures[0].number).toBe(1);
@@ -254,7 +252,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar2Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 4 measures: measure 1, measure 2, measure 2 (repeat), measure 3
     expect(convertedMeasures.length).toBe(4);
     expect(convertedMeasures[0].number).toBe(1);
@@ -269,7 +269,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar3Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 4 measures: measure 1, measure 2, measure 3, measure 3 (repeat)
     expect(convertedMeasures.length).toBe(4);
     expect(convertedMeasures[0].number).toBe(1);
@@ -284,7 +286,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar1To2Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 5 measures: measure 1, measure 2, measure 1 (repeat), measure 2 (repeat), measure 3
     expect(convertedMeasures.length).toBe(5);
     expect(convertedMeasures[0].number).toBe(1);
@@ -300,7 +304,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar1To3Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 6 measures: measure 1, measure 2, measure 3, measure 1 (repeat), measure 2 (repeat), measure 3 (repeat)
     expect(convertedMeasures.length).toBe(6);
     expect(convertedMeasures[0].number).toBe(1);
@@ -317,7 +323,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar2To3Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 5 measures: measure 1, measure 2, measure 3, measure 2 (repeat), measure 3 (repeat)
     expect(convertedMeasures.length).toBe(5);
     expect(convertedMeasures[0].number).toBe(1);
@@ -333,7 +341,9 @@ describe("convertRepeats", () => {
       "wholeBarRests",
       "repeatBar1To2RepeatBar3Rests"
     );
-    const convertedMeasures = toneJsUtils.convertRepeats(score.tracks[0]);
+    const convertedMeasures = toneJsUtils.convertRepeats(
+      score.tracks[0].measures
+    );
     // We expect 6 measures: measure 1, measure 2, measure 1 (repeat), measure 2 (repeat), measure 3, measure 3 (repeat)
     expect(convertedMeasures.length).toBe(6);
     expect(convertedMeasures[0].number).toBe(1);

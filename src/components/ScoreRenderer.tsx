@@ -262,12 +262,7 @@ export default function ScoreRenderer({
    * ***** METHODS *****
    */
   const buildPlaybackPart = () => {
-    const targetMeasures = score.tracks[0].measures;
-    const tempoResolved = targetMeasures[0].tempo || score.tempo;
-    const events = toneJsUtils.measuresToPlayback(
-      targetMeasures,
-      tempoResolved
-    );
+    const events = toneJsUtils.scoreToPlayback(score);
 
     if (partRef.current) partRef.current.dispose();
 

@@ -8,14 +8,13 @@ import type {
   Tempo,
   TimeSignature,
   Fraction,
-  Track,
   Score,
 } from "@/types";
 import { ensureExhaustive } from "@/lib/_utils";
 import { BarlineType } from "vexflow4";
 
 export function scoreToClickTrack(score: Score) {
-  const measures = convertRepeats(score.tracks[0]);
+  const measures = convertRepeats(score.tracks[0].measures);
   let offset = 0;
   const events: PartEventRich[] = [];
 
@@ -321,31 +320,42 @@ function transformVoiceForPlayback(
  * ENTRY POINT FUNCTION
  * Transforms an array of Measures into TONE.JS compatible playback data
  */
-export function measuresToPlayback(
-  measures: Measure[],
-  tempo: Tempo
-): PartEventRich[] | null {
-  if (measures.length === 0) return null;
 
+export function scoreToPlayback(score: Score): PartEventRich[] | null {
+  if (score.tracks?.every(({ measures }) => measures.length === 0)) return null;
   const playbackData: PartEventRich[] = [];
-  const transformedMeasures = measures.map((measure) =>
-    measure.voices.map(transformVoiceForPlayback)
+
+  let measureOffset = 0;
+
+  // TODO: only supporting 1 track for now
+  const normalizedMeasures = convertRepeats(score.tracks[0].measures).map(
+    (measure) => ({
+      ...measure,
+      voices: measure.voices.map(transformVoiceForPlayback),
+    })
   );
 
-  transformedMeasures.forEach((measureVoices) => {
-    measureVoices.forEach((voice) => {
-      let currentTime = 0;
+  for (const normalizedMeasure of normalizedMeasures) {
+    const voiceOffsets: number[] = new Array(
+      normalizedMeasure.voices.length
+    ).fill(measureOffset);
+
+    const tempoResolved = normalizedMeasure.tempo || score.tempo;
+
+    normalizedMeasure.voices.forEach((voice, vIdx) => {
       voice.forEach((ng) => {
         const { data, timeDelta } = noteGroupingToPlayback(
           ng,
-          tempo,
-          currentTime
+          tempoResolved,
+          voiceOffsets[vIdx]
         );
         playbackData.push(...data);
-        currentTime += timeDelta;
+        voiceOffsets[vIdx] += timeDelta;
       });
     });
-  });
+
+    measureOffset = Math.max(...voiceOffsets);
+  }
 
   return playbackData.length > 0 ? playbackData : null;
 }
@@ -386,10 +396,9 @@ function noteGroupingToPlayback(
   };
 }
 
-// TODO: Unit Test the ever-loving heck out of this
-export function convertRepeats(track: Track) {
-  const measures = [] as Measure[];
-  let copy = track.measures.slice();
+export function convertRepeats(measures: Measure[]) {
+  const output = [] as Measure[];
+  let copy = measures.slice();
   let done = false;
 
   while (!done) {
@@ -398,7 +407,7 @@ export function convertRepeats(track: Track) {
     );
 
     if (startRepeatIdx < 0) {
-      measures.push(...copy);
+      output.push(...copy);
       done = true;
       break;
     }
@@ -412,10 +421,10 @@ export function convertRepeats(track: Track) {
     }
 
     const toOutput = copy.slice(0, startRepeatIdx);
-    measures.push(...toOutput);
+    output.push(...toOutput);
     const repeatedMeasures = copy.slice(startRepeatIdx, endRepeatIdx + 1);
-    measures.push(...repeatedMeasures);
-    measures.push(...repeatedMeasures);
+    output.push(...repeatedMeasures);
+    output.push(...repeatedMeasures);
     copy = copy.slice(endRepeatIdx + 1);
 
     if (copy.length === 0) {
@@ -424,5 +433,5 @@ export function convertRepeats(track: Track) {
     }
   }
 
-  return measures;
+  return output;
 }
